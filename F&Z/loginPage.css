@@ -1,0 +1,87 @@
+#top,#bottom {
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 50%;
+}
+
+#top {
+    top: 0;
+    background-color: midnightblue;
+}
+#bottom {
+    bottom: 0;
+    background-color: lightsteelblue;
+}
+#loginTitle {
+    position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white;
+}
+#planetContainer {
+	position:absolute;
+    top: calc(50% - 225px);
+    left: calc(50% - 250px);
+}
+#meteorR {
+	position:absolute;
+    top: 75%;
+	left: 11%;
+}
+#meteorL {
+	position:absolute;
+    top: 15%;
+	left: 85%;
+}
+#imageContainer {
+	position:absolute;
+    top: calc(50% - 40px);
+    left: calc(50% - 400px);
+}
+.planet {
+	display: inline-block;
+}
+.facebookLogin, .googleLogin {
+	display: inline-block;
+}
+.circle {
+	-moz-border-radius: 50px/50px;
+	-webkit-border-radius: 50px 50px;
+	border-radius: 276px/276px;
+	border: solid 5px #fff;
+	width: 276px;
+	height: 276px;
+	position: absolute;
+	top: calc(50% - 120px);
+	left: calc(50% - 145px);
+}
+
+ul 
+{
+	list-style-type: none;
+	margin:0;
+	padding:0;
+	overflow: hidden;
+	background-color: #FF4343;
+}
+li
+{
+	float:left;
+}
+
+li a
+{
+	display: inline-block;
+	border:1px solid #FFFFFF;
+	color: white;
+	text-align: center;
+	padding: 14px 60px;
+	text-decoration: none;
+}
+
+li a:hover
+{
+	background-color: #990033;
+}
