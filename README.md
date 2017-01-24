@@ -13,7 +13,7 @@ EXAMPLE DE CODE
 
 MOTIVATION
 
-Passer le cours et obtenir une bonne note. FUCKING OBVIOUSLY
+Passer le cours et obtenir une bonne note.
 
 
 INSTALLATION
