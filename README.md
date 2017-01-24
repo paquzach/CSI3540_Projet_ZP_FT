@@ -1,4 +1,4 @@
-Logo: ![Alt] (F&Z\pictures/logo.png "Logo")
+Logo: ![Alt] (F/&Z\pictures/logo.png "Logo")
 
 ##SYNOPSIS
 
