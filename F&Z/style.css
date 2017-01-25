@@ -1,3 +1,8 @@
+body
+{
+	background-color: lightgreen;
+}
+
 #top,#bottom {
     position: fixed;
     left: 0;
@@ -61,10 +66,12 @@
 ul 
 {
 	list-style-type: none;
-	margin:0;
-	padding:0;
+	margin:auto;
+	padding: 0 12% 0 0;
 	overflow: hidden;
 	background-color: #32cd46; 
+	font-size: 25px; 
+	font-weight: bold;
 }
 li
 {
@@ -79,11 +86,12 @@ li a
 	text-align: center;
 	padding: 14px 60px;
 	width: 160px;
+	height: 30px;
 	text-decoration: none;
 }
 
 li a:hover
 {
-	background-color: #966f33;
+	background-color: #966f33 !important; 
 }
 </style>
