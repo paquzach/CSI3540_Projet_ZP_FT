@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Game home page</title>
+<title>Details du jeu</title>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 
-<div style="width: 100%; height: auto;">
+<div style="width: 100%; height: 100px;">
 	<img src="pictures/logo.png" alt="Group Logo" height="100" width="100">
 	<h1 style="vertical-align: top;  display:inline-block; line-height: 1.8;">Projet de CSI3540</h1>
+	<a href="login.html" class="login">Se connecter</a>
 </div>
 
 <ul>
-	<li><a href="home.html" style="background-color: #239031;">Home</a> </li>
-	<li><a href="login.html">Login</a></li>
-	<li><a href="highscore.html">Highscore</a> </li>
-	<li><a href="game.html" style="background-color: #e6c700;">Play Game</a> </li>
+	<li><a href="home.html" style="background-color: #239031;">Le jeu</a> </li>
+	<li class="dropdown">
+		<a href="community.html" class="dropbtn">Communaut&eacute;</a> 
+	
+		<div class="dropdown-content">
+			<a href="myAccount.html">Mon compte</a>
+      		<a href="highscore.html">Classements</a>
+		</div>
+	</li>
+	<li><a href="game.html" style="background-color: #e6c700;">Jouer</a> </li>
 </ul>
 
 </body>
