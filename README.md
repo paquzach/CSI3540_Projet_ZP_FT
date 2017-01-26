@@ -17,6 +17,10 @@ Toute information sauvegardée va être lié avec le compte Google de l'utilisat
 
 [Node.js] (https://nodejs.org/api/ "Node.js") pour la connection au serveur 
 
+[MySQL] (https://dev.mysql.com/doc/refman/5.7/en/ "MySQL") pour la création d'une base de données
+
+[PHP] (http://php.net/manual/en/langref.php "PHP") language pour la collecte de données d'une base de données
+
 [Google Identity Platform] (https://developers.google.com/identity/ "Google Identity Platform") pour la connection par compte google
 
 [Pixi.js] (http://pixijs.download/v4.2.2/docs/index.html "Pixi.js") pour le game engine
