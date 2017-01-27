@@ -148,4 +148,19 @@ a.login
 	margin-right:20%;
 }
 
+#changeprofilepicture {
+  width:170px;
+  height: 25px;
+  background-color: #009900;
+  moz-border-radius: 15px;
+  -webkit-border-radius: 5px;
+  border: 1px solid #383f38;
+  padding: 1px;
+  font-weight: bold;
+}
+
+#changeprofilepicture:hover {
+	opacity: 0.6; 
+}
+
 </style>
