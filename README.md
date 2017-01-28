@@ -7,6 +7,11 @@ Le but du jeu est de survivre le plus longtemp possible sans ce faire frapper pa
 Les classements vont être sauvgardé en ligne et accessible a tout joueur pour comparer sur une page dédié.
 Toute information sauvegardée va être lié avec le compte Google de l'utilisateur.
 
+##ACCÈS AU SITE WEB
+
+Pour le moment, il est possible d'acceder notre site web avec l'adresse IP de notre serveur. Voici le lien pour notre [site] (http://99.236.195.44:8282 "WEBSITE").
+
+
 ##MOTIVATION
 
 À part de vouloir bien réussir dans le cours, nous aimons construire des jeux. Construire un site web contenant un jeu simple sera de la bonne pratique si nous décidons de continuer dans cette direction dans le futur. 
