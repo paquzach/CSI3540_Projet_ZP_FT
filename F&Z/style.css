@@ -1,6 +1,6 @@
 body
 {
-	background-color: #ceffce;
+	background-color: #062d1d;
 }
 
 .siteBoxes
@@ -148,9 +148,9 @@ li.dropdown {
 a.login 
 {
 	float: right;
+	color:white;
 	position: relative;
 	font-size: 20px;
-	color: green;
 	top:8px;
 	margin-right:20%;
 }
