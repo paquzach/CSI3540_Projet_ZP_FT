@@ -3,6 +3,9 @@
 <head>
 	<title>Se connecter</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<!-- These is the necessary libraries for google logine -->
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<meta name="google-signin-client_id" content="33540882306-03d3q7q1vu00c872845gr4ac0s6480ll.apps.googleusercontent.com.apps.googleusercontent.com">
 </head>
 <body>
 
@@ -48,7 +51,7 @@
 				</div>
 			</div>
     		<div style="display: inline-block;">
-    			<img src="pictures/google_login.png" alt="Google login">
+    			<div class="g-signin2" data-onsuccess="onSignIn"></div>
     		</div>
 		</div>
 	</div>
