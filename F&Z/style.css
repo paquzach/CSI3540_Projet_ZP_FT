@@ -20,6 +20,7 @@ body
 	border-radius: 5px;
 	position: relative;
 	margin: auto;
+	margin-top: 5px;
 }
 
 .prev, .next {
@@ -42,7 +43,8 @@ body
 }
 
 .prev:hover, .next:hover{
-	background-color: rgba(0,0,0,0.8);
+	background-color: rgba(198,231,206,0.8);
+	color: #062d1d;
 }
 
 .text{
@@ -57,7 +59,8 @@ body
 
 .numbertext {
   	color: #f2f2f2;
-  	font-size: 12px;
+  	font-size: 15px;
+  	font-weight: bold;
   	padding: 8px 12px;
   	position: absolute;
   	top: 0;
@@ -69,14 +72,14 @@ body
   	height: 18px;
   	width: 18px;
   	margin: 0 2px;
-  	background-color: #bbb;
+  	background-color: #c6e7ce;
  	border-radius: 50%;
   	display: inline-block;
   	transition: background-color 0.6s ease;
 }
 
 .active, .dot:hover {
-  background-color: #717171;
+  background-color: #062d1d;
 }
 
 .fade {
@@ -159,8 +162,7 @@ body
 .centerDiv {
 	width: 300px;
 	height:400px;
-	margin-left:auto;
-	margin-right: auto;
+	margin: auto;
 	position:absolute;
 	border: 3px solid #e6c700;
 	border-radius: 5px;
@@ -170,18 +172,22 @@ body
 
 ul 
 {
+	margin-top: 0px;
+	width: 100%;
+	margin: 0 auto;
 	list-style-type: none;
-	margin-top: 0;
 	overflow: hidden;
 	background-color: #84cf96; 
 	font-size: 25px; 
 	font-weight: bold;
+	padding:0px;
 }
 li
 {
 	float:left; 
 	border-left:1px solid white;
 	border-right: 1px solid white;
+
 }
 
 li a, .dropbtn
@@ -189,9 +195,9 @@ li a, .dropbtn
 	display: inline-block;
 	color: black;
 	text-align: center;
-	padding: 14px 60px;
+	padding: 15px 60px;
 	width: 160px;
-	height: 30px;
+	height:100%;
 	text-decoration: none;
 }
 
@@ -210,7 +216,7 @@ li.dropdown {
     background-color: #84cf96;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+    z-index: 15;
 }
 
 .dropdown-content a {
@@ -256,5 +262,3 @@ a.login
 #changeprofilepicture:hover {
 	opacity: 0.6; 
 }
-
-</style>
