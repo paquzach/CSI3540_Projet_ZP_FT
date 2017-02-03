@@ -1,0 +1,171 @@
+body
+{
+	background-color: #062d1d;
+}
+
+.siteBoxes
+{
+	background-color: #c6e7ce;
+	border: 3px solid #ffdd00; 
+	border-radius: 5px;
+}
+
+#top,#bottom {
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 50%;
+}
+
+#top {
+    top: 0;
+    background-color: midnightblue;
+}
+#bottom {
+    bottom: 0;
+    background-color: lightsteelblue;
+}
+#loginTitle {
+    position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white;
+}
+#planetContainer {
+	position:absolute;
+    top: calc(50% - 225px);
+    left: calc(50% - 250px);
+}
+#meteorR {
+	position:absolute;
+    top: 75%;
+	left: 11%;
+}
+#meteorL {
+	position:absolute;
+    top: 15%;
+	left: 85%;
+}
+#imageContainer {
+	position:absolute;
+    top: calc(50% - 40px);
+    left: calc(50% - 400px);
+}
+.planet {
+	display: inline-block;
+}
+.facebookLogin, .googleLogin {
+	display: inline-block;
+}
+.circle {
+	-moz-border-radius: 50px/50px;
+	-webkit-border-radius: 50px 50px;
+	border-radius: 276px/276px;
+	border: solid 5px #fff;
+	width: 276px;
+	height: 276px;
+	position: absolute;
+	top: calc(50% - 120px);
+	left: calc(50% - 145px);
+}
+.centerDiv {
+	width: 300px;
+	height:400px;
+	margin-left:auto;
+	margin-right: auto;
+	position:absolute;
+	border: 3px solid #e6c700;
+	border-radius: 5px;
+	background-color: #65e765;
+	top:50%;
+}
+
+ul 
+{
+	list-style-type: none;
+	margin-top: 0;
+	overflow: hidden;
+	background-color: #84cf96; 
+	font-size: 25px; 
+	font-weight: bold;
+}
+li
+{
+	float:left; 
+	border-left:1px solid white;
+	border-right: 1px solid white;
+}
+
+li a, .dropbtn
+{
+	display: inline-block;
+	color: black;
+	text-align: center;
+	padding: 14px 60px;
+	width: 160px;
+	height: 30px;
+	text-decoration: none;
+}
+
+li a:hover, .dropdown:hover .dropbtn
+{
+	background-color: #ffb84d !important; 
+}
+
+li.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #84cf96;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    width: 280px;
+    border-top: 1px solid white;
+}
+
+.dropdown-content a:hover 
+{
+	background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+a.login 
+{
+	float: right;
+	color:white;
+	position: relative;
+	font-size: 20px;
+	top:8px;
+	margin-right:20%;
+}
+
+#changeprofilepicture {
+  width:170px;
+  height: 25px;
+  background-color: #009900;
+  moz-border-radius: 15px;
+  -webkit-border-radius: 5px;
+  border: 1px solid #383f38;
+  padding: 1px;
+  font-weight: bold;
+}
+
+#changeprofilepicture:hover {
+	opacity: 0.6; 
+}

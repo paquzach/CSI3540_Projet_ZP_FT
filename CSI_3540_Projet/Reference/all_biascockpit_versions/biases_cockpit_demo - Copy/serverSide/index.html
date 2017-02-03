@@ -1,0 +1,46 @@
+<!doctype html>
+<html ng-app="biasesController" ng-controller="BiasesController as biases">
+	<head>	
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+		<script src="javascripts/biasesController.js"></script>
+		<link rel="stylesheet" href="stylesheets/biasesStyle.css">
+		
+		<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+		<script>
+			var server = io.connect('http://localhost:8080');
+			
+			server.on('connected', function(msg) {
+				console.log(msg);
+			});
+			
+			server.on('jsonUpdated', function(msg) {
+				console.log(msg);
+			});
+		</script>
+	</head>
+	<body>
+		<h2> Biases cockpit </h2>
+		<div>
+			<span> Products: </span>
+			<ul class="unstyled">
+				<li ng-repeat="product in biases.productList">
+				<label class="checkbox">
+					<input type="checkbox" ng-model="product.boost" ng-change="biases.validateProductValues(product)">
+					<span class="boost-{{product.boost}}">{{product.code}}</span>
+					<div ng-if="true == product.boost">
+						<form ng-submit="biases.validateProductValues(product)">
+							<input type="number" step=0.01 ng-model="product.boostValue" size="30" width=15 value={{product.boostValue}} ng-change="biases.validateProductValues(product)">
+						</form>
+					</div>
+					<div ng-if="true != product.boost">
+						<span class="boost-{{product.boost}}">NO BOOST</span>
+					</div>
+				</label>
+				</li>
+			</ul>
+		</div>
+		<div ng-controller="BiasesController as biases">
+			<button type="button" ng-click="biases.saveChanges()">Save changes</button>
+		</div>
+	</body>
+</html>

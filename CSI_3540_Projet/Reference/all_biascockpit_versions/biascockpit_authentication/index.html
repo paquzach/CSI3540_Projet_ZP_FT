@@ -1,0 +1,66 @@
+<!doctype html>
+<html ng-app="biasesController" ng-controller="BiasesController as biases">
+	<head>	
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+		<script src="javascripts/biasesController.js"></script>
+		<link rel="stylesheet" href="stylesheets/biasesStyle.css">
+		
+		<script src="http://localhost:8080/socket.io/socket.io.js"></script>
+		<script>
+			var server = io.connect('http://localhost:8080');
+		</script>
+	</head>
+	<body>
+		<h2> Biases cockpit </h2>
+		<div>
+			<section>
+				<span style="font-weight:bold;"> Products: </span>
+				<button class="button-link" type="button" ng-click="biases.addProductLine()">+</button>
+				<ul class="unstyled">
+					<li ng-repeat="product in biases.productList">
+						<div>
+							<span class="boost-true">{{product.code}}</span>
+							<form>
+								<input type="number" step=0.01 ng-model="product.boost" size="30" width=15 value={{product.boost}} ng-change="biases.validateProductValues(product)">
+								<button class="button-link" type="button" ng-click="biases.removeProductLine(product)">-</button>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</section>
+			<section>
+				<span style="font-weight:bold;"> Categories: </span>
+				<button class="button-link" type="button" ng-click="biases.addCategoryLine()">+</button>
+				<ul class="unstyled">
+					<li ng-repeat="category in biases.categoryList">
+						<div>
+							<span class="boost-true">{{category.code}}</span>
+							<form>
+								<input type="number" step=0.01 ng-model="category.boost" size="30" width=15 value={{category.boost}} ng-change="biases.validateCategoryValues(category)">
+								<button class="button-link" type="button" ng-click="biases.removeCategoryLine(category)">-</button>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</section>
+			<section>
+				<span style="font-weight:bold;"> Brands: </span>
+				<button class="button-link" type="button" ng-click="biases.addBrandLine()">+</button>
+				<ul class="unstyled">
+					<li ng-repeat="brand in biases.brandList">
+						<div>
+							<span class="boost-true">{{brand.code}}</span>
+							<form>
+								<input type="number" step=0.01 ng-model="brand.boost" size="30" width=15 value={{brand.boost}} ng-change="biases.validateBrandValues(brand)">
+								<button class="button-link" type="button" ng-click="biases.removeBrandLine(brand)">-</button>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</section>
+		</div>
+		<div>
+			<button class="button-link" type="button" ng-click="biases.saveChanges()">Save changes</button>
+		</div>
+	</body>
+</html>
