@@ -16,41 +16,42 @@ body
 	border-radius: 5px;
 	text-align: center;
 	width: 700px; 
-	height:150px ;
-	margin-left:auto; 
- 	margin-right: auto; 
-	margin-top: 10px;
-    -webkit-transition: border 1s, width 1s;
-    transition: border 1s, width 1s;
+	height:120px ;
+	margin:5px auto;
+    -webkit-transition: border 1s, border-radius 1s, width 1s, background-color 2s;
+    transition: border 1s, border-radius 1s, width 1s, background-color 2s;
 }
 
 .communityBox:hover{
-	border: 3px solid red;
+	background-color: #84cf96;
+	border: 3px solid #2b6e3b;
+	border-radius: 0px;
 	width: 740px;
 }
 
 .communityHeader{
-	margin-top:38px;
+	margin-top:34px;
 	text-align: center;
-	font-size: 60px;
+	font-size: 40px;
 	-webkit-transition: margin-top 1s;
     transition: margin-top 1s;
 }
 
 .communityBox:hover > .communityHeader{
-	margin-top:0;
+	margin-top:10px;
 }
 
 #communityText1, #communityText2{
 	opacity: 0;
-	margin-top: -50px;
+	font-size: 20px;
+	margin-top: -40px;
 	-webkit-transition: margin-top 1s, opacity 1s;
     transition: margin-top 1s, opacity 1s;
 }
 
 #communityBox1:hover > #communityText1, #communityBox2:hover > #communityText2{
 	opacity: 1;
-	margin-top: 0px;
+	margin-top: -5px;
 }
 
 .mySlides {
@@ -217,6 +218,7 @@ ul
 {
 	margin-top: 0px;
 	width: 100%;
+	height: 59px;
 	margin: 0 auto;
 	list-style-type: none;
 	overflow: hidden;
@@ -252,9 +254,8 @@ li a, .dropbtn
 	display: inline-block;
 	color: black;
 	text-align: center;
-	padding: 15px 60px;
-	width: 160px;
-	height:100%;
+	padding: 15px 10px;
+	width: 260px;
 	text-decoration: none;
 }
 
@@ -294,10 +295,6 @@ li.dropdown {
     border-top: 1px solid white;
 }
 
-.dropdown-content a:hover 
-{
-	background-color: #f1f1f1;
-}
 
 .dropdown:hover .dropdown-content {
     display: block;
