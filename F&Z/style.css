@@ -10,6 +10,49 @@ body
 	border-radius: 5px;
 }
 
+.communityBox{
+	background-color: #c6e7ce;
+	border: 3px solid #ffdd00; 
+	border-radius: 5px;
+	text-align: center;
+	width: 700px; 
+	height:150px ;
+	margin-left:auto; 
+ 	margin-right: auto; 
+	margin-top: 10px;
+    -webkit-transition: border 1s, width 1s;
+    transition: border 1s, width 1s;
+}
+
+.communityBox:hover{
+	border: 3px solid red;
+	width: 740px;
+}
+
+.communityHeader{
+	margin-top:38px;
+	text-align: center;
+	font-size: 60px;
+	-webkit-transition: margin-top 1s;
+    transition: margin-top 1s;
+}
+
+.communityBox:hover > .communityHeader{
+	margin-top:0;
+}
+
+#communityText1, #communityText2{
+	opacity: 0;
+	margin-top: -50px;
+	-webkit-transition: margin-top 1s, opacity 1s;
+    transition: margin-top 1s, opacity 1s;
+}
+
+#communityBox1:hover > #communityText1, #communityBox2:hover > #communityText2{
+	opacity: 1;
+	margin-top: 0px;
+}
+
 .mySlides {
 	display: none;
 }
@@ -178,6 +221,7 @@ ul
 	list-style-type: none;
 	overflow: hidden;
 	background-color: #84cf96; 
+	
 	font-size: 25px; 
 	font-weight: bold;
 	padding:0px;
@@ -188,6 +232,19 @@ li
 	border-left:1px solid white;
 	border-right: 1px solid white;
 
+	background: -webkit-radial-gradient(circle, #84cf96, #47b862, #84cf96);
+  	background: -o-radial-gradient(circle, #84cf96, #47b862, #84cf96);
+  	background: -moz-radial-gradient(circle, #84cf96, #47b862, #84cf96);
+  	background: radial-gradient(circle, #84cf96, #47b862, #84cf96);
+
+}
+
+.gameTab{
+	background-color: #ffdd00;
+	background: -webkit-radial-gradient(circle, #ffdd00, #ffad33, #ffdd00); 
+  	background: -o-radial-gradient(circle, #ffdd00, #ffad33, #ffdd00); 
+  	background: -moz-radial-gradient(circle, #ffdd00, #ffad33, #ffdd00);
+  	background: radial-gradient(circle, #ffdd00, #ffad33, #ffdd00);
 }
 
 li a, .dropbtn
@@ -204,6 +261,10 @@ li a, .dropbtn
 li a:hover, .dropdown:hover .dropbtn
 {
 	background-color: #ffb84d !important; 
+	background: -webkit-radial-gradient(circle, #ffb84d, #ffa31a, #ffb84d); 
+  	background: -o-radial-gradient(circle, #ffb84d, #ffa31a, #ffb84d); 
+  	background: -moz-radial-gradient(circle, #ffb84d, #ffa31a, #ffb84d);
+  	background: radial-gradient(circle, #ffb84d, #ffa31a, #ffb84d);
 }
 
 li.dropdown {
@@ -214,6 +275,10 @@ li.dropdown {
     display: none;
     position: absolute;
     background-color: #84cf96;
+    background: -webkit-radial-gradient(circle, #47b862, #84cf96, #47b862);
+  	background: -o-radial-gradient(circle, #47b862, #84cf96, #47b862);
+  	background: -moz-radial-gradient(circle, #47b862, #84cf96, #47b862);
+  	background: radial-gradient(circle, #47b862, #84cf96, #47b862);
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 15;
