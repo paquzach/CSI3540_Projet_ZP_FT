@@ -10,6 +10,31 @@ body
 	border-radius: 5px;
 }
 
+.movingLogo{
+	position: relative;
+	left:80px;
+	transform: rotate(-25deg);
+}
+
+.signInBox:hover .movingLogo{
+	animation-duration: 1s;
+  	animation-name: logoMove;
+  	animation-iteration-count: infinite;
+  	animation-direction: alternate;
+  	animation-timing-function: linear;
+}
+
+@keyframes logoMove{
+	from{
+		left: 80px;
+		transform: rotate(-25deg);
+	}
+	to{
+		left: 120px;
+		transform: rotate(25deg);
+	}
+}
+
 .communityBox{
 	background-color: #c6e7ce;
 	border: 3px solid #ffdd00; 
