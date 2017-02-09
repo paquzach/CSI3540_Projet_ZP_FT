@@ -81,7 +81,7 @@ body
 	border:3px solid  #40a558;
 	text-align: left;
 	font-size: 24px;
-	padding: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 10px;
 }
 
 .highscoresTable td{
@@ -104,6 +104,7 @@ body
 	border-right:3px solid #40a558;
 }
 #highscoreBody tr td:nth-child(4), #highscoreFirstBody tr td:nth-child(4){
+	padding-left: 10px;
 	width: 180px;
 }
 .highscoresTable > tbody tr:nth-of-type(even) {
