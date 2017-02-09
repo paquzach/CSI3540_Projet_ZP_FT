@@ -62,6 +62,55 @@ body
     transition: margin-top 1s;
 }
 
+.highscoresTable{
+	width: 860px;
+	height: auto;
+	background-color: #91d4a1;
+	border:3px solid #40a558;
+	border-collapse: collapse;
+	margin: 0px 15px 0px 15px;
+}
+
+.highscoresTable tr {
+	height: 45px;
+	padding: 0px 0px 0px 0px;
+	border-bottom: 3px solid  #40a558;
+}
+
+.highscoresTable th{
+	border:3px solid  #40a558;
+	text-align: left;
+	font-size: 24px;
+	padding: 0px 0px 0px 0px;
+}
+
+.highscoresTable td{
+	font-size: 18px;
+	font-weight: bold;
+	padding: 0px 0px 0px 0px;
+}
+
+#highscoreBody tr td:nth-child(1), #highscoreFirstBody tr td:nth-child(1){
+	width: 90px;
+	text-align: center;
+}
+#highscoreBody tr td:nth-child(2), #highscoreFirstBody tr td:nth-child(2){
+	width: 50px;
+	padding-left: 10px;
+	border-left:3px solid #40a558;
+}
+#highscoreBody tr td:nth-child(3), #highscoreFirstBody tr td:nth-child(3){
+	padding-left: 80px;
+	border-right:3px solid #40a558;
+}
+#highscoreBody tr td:nth-child(4), #highscoreFirstBody tr td:nth-child(4){
+	width: 180px;
+}
+.highscoresTable > tbody tr:nth-of-type(even) {
+   background-color:#b6e2c0;
+}
+
+
 .communityBox:hover > .communityHeader{
 	margin-top:10px;
 }
@@ -300,6 +349,7 @@ li.dropdown {
 .dropdown-content {
     display: none;
     position: absolute;
+    top:98px;
     background-color: #84cf96;
     background: -webkit-radial-gradient(circle, #47b862, #84cf96, #47b862);
   	background: -o-radial-gradient(circle, #47b862, #84cf96, #47b862);
