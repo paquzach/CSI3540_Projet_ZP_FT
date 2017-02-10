@@ -91,7 +91,7 @@ body
 }
 
 #highscoreBody tr td:nth-child(1), #highscoreFirstBody tr td:nth-child(1){
-	width: 90px;
+	width: 110px;
 	text-align: center;
 }
 #highscoreBody tr td:nth-child(2), #highscoreFirstBody tr td:nth-child(2){
@@ -104,8 +104,10 @@ body
 	border-right:3px solid #40a558;
 }
 #highscoreBody tr td:nth-child(4), #highscoreFirstBody tr td:nth-child(4){
-	padding-left: 10px;
-	width: 180px;
+	padding-right: 10px;
+	text-align: right;
+	width: 160px;
+
 }
 .highscoresTable > tbody tr:nth-of-type(even) {
    background-color:#b6e2c0;
