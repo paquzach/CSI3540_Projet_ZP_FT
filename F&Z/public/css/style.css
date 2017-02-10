@@ -12,7 +12,7 @@ body
 
 .movingLogo{
 	position: relative;
-	left:80px;
+	left:90px;
 	transform: rotate(-25deg);
 }
 
@@ -26,11 +26,11 @@ body
 
 @keyframes logoMove{
 	from{
-		left: 80px;
+		left: 90px;
 		transform: rotate(-25deg);
 	}
 	to{
-		left: 120px;
+		left: 130px;
 		transform: rotate(25deg);
 	}
 }
