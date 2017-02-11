@@ -35,18 +35,38 @@
 	<div style="display: inline-block; width: 54%; height: 44%; margin-bottom: 85px; vertical-align: top;">
 		<p style="vertical-align: top; position: relative; font-size: 25px; font-weight: bold; margin: 5px 0px 0px 10px; line-height: 2.3; ">
 			Surnom: 
-			<textarea disabled style="width: 250px; height: 25px; font-size: 22px;" placeholder="Surnom de l'usager"></textarea>
+			<textarea readonly="true;" id="nicknameArea" style="width: 250px; height: 25px; font-size: 22px; font-weight: bold;">FranticZ</textarea>
 			<br>
 			Couriel: <a style="color: #0645ad;">fran-san@rogers.ca</a><br>
-			Meilleur score: not good enough to be posted<br>
+			Meilleur score: 13 400 U<br>
 			Nombre d'essais: 13<br>
 		</p>
 	</div>
 	<div style="display: block; width: 50%; margin: 0px auto;">
-		<button style="width:49%; height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px;">Changer mon surnom</button>
-		<button disabled style="width:49%; height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px; float: right;">Soumettre</button>
+		<button id = "btnChange" style="width:49%; height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px;" onclick="nameChange();">Changer mon surnom</button>
+		<button id= "btnSubmit" disabled style="width:49%; height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px; float: right;" onclick="nameSubmit();">Soumettre</button>
 	</div>
 </div>
+
+<script type="text/javascript">
+
+	function nameChange(){
+		var elem = document.getElementById('nicknameArea');
+		elem.readOnly = false;
+		elem.style.backgroundColor = '#ffaa00';
+		document.getElementById('btnSubmit').disabled = false;
+		document.getElementById('btnChange').disabled = true;
+	}
+
+	//Envoyer le nouveau nom a la base de donnees ici
+	function nameSubmit(){
+		var elem = document.getElementById('nicknameArea');
+		elem.readOnly = true;
+		elem.style.backgroundColor = 'white';
+		document.getElementById('btnSubmit').disabled = true;
+		document.getElementById('btnChange').disabled = false;
+	}
+</script>
 
 </body>
 </html>
