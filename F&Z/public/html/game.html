@@ -27,8 +27,25 @@
 </div>
 </ul>
 
-<div class="siteBoxes" style="width:800px; max-height:550px;  margin: 5px auto;">
-    <img src="../pictures/game_sample.png" alt="Logo" style="width: 100%; max-height: 550px">
+<div style="width:800px; margin:0 auto;">
+    <script type="text/javascript">
+	    var type = "WebGL"
+	    if(!PIXI.utils.isWebGLSupported()){
+	      type = "canvas"
+	    }
+
+	    PIXI.utils.sayHello(type)
+
+	    var renderer = PIXI.autoDetectRenderer(800, 550);
+	    renderer.view.style.border = "3px solid #ffdd00";
+	    renderer.backgroundColor = 0xffffff;
+	    renderer.view.style.position = "absolute";
+		renderer.view.style.display = "block";
+	    document.body.appendChild(renderer.view);
+
+	    var stage = new PIXI.Container();
+	    renderer.render(stage);
+  </script>
 </div>
 
 </body>

@@ -27,7 +27,11 @@ module.exports = function(app, passport, io){
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		res.render('game.html', { user: req.user});
+		res.render('game.php', { user: req.user}); // Change to game.html if using HTML pages
+	});
+
+		app.get('/loginUnsuccesful', isLoggedIn, function(req, res) {
+		res.render('home.php'); // Change to game.html if using HTML pages
 	});
 
 	app.get('/community.html', function(req, res) {
