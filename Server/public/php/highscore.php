@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Classements</title>
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body onload="loadTable();">
+
+<div style="width: 100%; height: 40px; margin-top:-8px;">
+	<img src="../pictures/logo.png" alt="Group Logo" height="40" width="40">
+	<h3 style="vertical-align: top;  display:inline-block; line-height: 0; color:white;">Projet de CSI3540</h3>
+	<a href="login.php" class="login">Se connecter</a>
+</div>
+
+<ul>
+<div style="margin:auto; width: 846px;">
+	<li><a href="home.php">Frantic MeteorZ</a> </li>
+	<li class="dropdown">
+		<a href="community.php" class="dropbtn">Communaut&eacute;</a> 
+	
+		<div class="dropdown-content">
+			<a href="myAccount.php">Mon compte</a>
+      		<a href="highscore.php">Classements</a>
+		</div>
+	</li>
+	<li><a href="game.php" class="gameTab">Jouer</a> </li>
+</div>
+</ul>
+
+<div class="siteBoxes" style="width: 900px; height: 600px; margin: 5px auto;">
+	<h1 style="margin-left: 10px;">Classements</h1>
+	<table class="highscoresTable">
+		<thead>
+			<tr>
+				<th>Rang</th>
+				<th colspan="2">Usager</th>
+				<th>Score</th>
+			</tr>
+		</thead>
+		<tbody id="highscoreFirstBody">
+		</tbody>
+	</table>
+	<div style="height: 425px;; overflow-y: scroll; position: relative; ">
+		<table class="highscoresTable" style="border-top:none;">
+			<tbody id="highscoreBody" style="border-bottom: 10px solid #40a558;">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+	function loadTable(){
+		var numUsers = 100;
+		var superScore = 100000000;
+		//Load current user data if it exists
+		document.querySelector("#highscoreFirstBody").innerHTML += "<tr style='background-color:#ffaa00;'><td>67</td><td><img src='../pictures/player_sample.jpg' alt='Group Logo' height='35' width='35' style='margin-top:3px;'></td><td>FranticZ (Current User)</td><td>13 400 U</td></tr>";
+		//load all users and their scores
+		for (var i = 1; i <= numUsers; i++) {
+			document.querySelector("#highscoreBody").innerHTML += "<tr><td>" + i + "</td><td><img src='../pictures/logo.png' alt='Group Logo' height='35' width='35' style='margin-top:3px;'></td><td>User " + i +"</td><td>" + superScore + " U</td></tr>";
+			superScore = superScore - 19963*i;
+		}		
+	}
+</script>
+
+</body>
+</html>
