@@ -4,8 +4,6 @@ var slideIndex = 1;
 showSlides(slideIndex);
 var isClicked = false;
 
-window.onload = function(){setInterval(function(){plusSlides(1);}, 8000);}
-
 function clickSlide(){
 	isClicked = true;
 }

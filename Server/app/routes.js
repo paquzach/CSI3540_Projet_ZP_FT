@@ -18,7 +18,7 @@ module.exports = function(app, passport, io){
 	//
 	
 	app.get('/', function(req, res) {
-		res.render('home.html');
+		res.render('home.php');
 	});
 
 	app.get('/home.html', function(req, res) {
@@ -26,11 +26,11 @@ module.exports = function(app, passport, io){
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		res.render('game.html', { user: req.user});
+		res.render('game.php', { user: req.user}); // Change to game.html if using HTML pages
 	});
 
-	app.get('/loginUnsuccesful' , function(req, res) {
-		res.render('home.html');
+	app.get('/loginUnsuccesful', isLoggedIn, function(req, res) {
+		res.render('home.php'); // Change to game.html if using HTML pages
 	});
 
 	app.get('/community.html', function(req, res) {
@@ -53,7 +53,7 @@ module.exports = function(app, passport, io){
 		res.render('login.html');
 	});
 
-	app.get('/home.html', function(req, res) {
+	app.get('/home.php', function(req, res) {
 		if(req.user == null) {
 			console.log("User not logged in");
 		} else {
@@ -69,6 +69,36 @@ module.exports = function(app, passport, io){
 		res.render('home.php');
 	});
 	
+	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
+		res.render('game.php', { user: req.user});
+	});
+
+	app.get('/test.php', function(req, res) {
+		res.render('test.php');
+	});
+
+	app.get('/community.php', function(req, res) {
+		res.render('community.php');
+	});
+
+	app.get('/myAccount.php', function(req, res) {
+		getUserData(function(currentUser) {
+			res.render('myAccount.php', { user: currentUser});
+		});
+	});
+
+	app.get('/highscore.php', function(req, res) {
+		res.render('highscore.php');
+	});
+
+	app.get('/game.php', function(req, res) {
+		res.render('game.php');
+	});
+
+	app.get('/login.php', function(req, res) {
+		res.render('login.php');
+	});
+
 	app.get('/connection.php', function(req, res){
 		exec("php connection.php", function (error, stdout, stderr) {
 			console.log(stdout);
