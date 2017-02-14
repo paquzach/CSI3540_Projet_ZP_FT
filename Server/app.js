@@ -35,9 +35,9 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash());
 
 // view engine setup
-app.set('views', path.join(__dirname, 'public/php'));
-app.engine('php', require('ejs').renderFile);
-app.set('view engine', 'php');
+app.set('views', path.join(__dirname, 'public/html'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 require('./app/routes.js')(app, passport, io);
 
 server.listen(port, "0.0.0.0");

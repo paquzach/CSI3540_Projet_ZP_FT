@@ -1,7 +1,7 @@
 module.exports = {
 	'googleAuth' : {
-		'clientID': '33540882306-i7edthq39rn6su2rs0ri1u86vjbfueh2.apps.googleusercontent.com',
-		'clientSecret': '-5PomJOk5mAPWIkWdR__0QYa',
-		'callbackURL': 'http://csitroiscinqquatrezero.chickenkiller.com/auth/google/callback'
+		'clientID': '33540882306-ui720qij0ph4l2reojuhlplgvl3bs68d.apps.googleusercontent.com',
+		'clientSecret': '_i-8razbWkMBvz0gVikzcyp8',
+		'callbackURL': 'http://localhost:8282/auth/google/callback'
 	}
 }
