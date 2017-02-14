@@ -29,23 +29,7 @@
 </ul>
 
 <div style="width:800px; margin:0 auto;">
-    <script type="text/javascript">
-	    var type = "WebGL"
-	    if(!PIXI.utils.isWebGLSupported()){
-	      type = "canvas"
-	    }
-
-	    PIXI.utils.sayHello(type)
-
-	    var renderer = PIXI.autoDetectRenderer(800, 550);
-	    renderer.view.style.border = "3px solid #ffdd00";
-	    renderer.backgroundColor = 0xffffff;
-	    renderer.view.style.position = "absolute";
-		renderer.view.style.display = "block";
-	    document.body.appendChild(renderer.view);
-
-	    var stage = new PIXI.Container();
-	    renderer.render(stage);
+    <script type="text/javascript" src="../javascript/game.js"></script>
   </script>
 </div>
 

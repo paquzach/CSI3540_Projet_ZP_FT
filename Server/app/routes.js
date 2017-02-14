@@ -86,6 +86,10 @@ module.exports = function(app, passport, io){
 	app.get('../javascript/siteScript.js', function(req, res) {
 		res.sendFile(path.join(__dirname+'/../public/javascript/siteScript.js'));
 	});
+
+	app.get('../javascript/game.js', function(req, res) {
+		res.sendFile(path.join(__dirname+'/../public/javascript/game.js'));
+	});
 	
 	app.get('/favicon.ico', function(req, res) {
 		res.sendFile(path.join(__dirname+'/../public/php/favicon.ico'));
