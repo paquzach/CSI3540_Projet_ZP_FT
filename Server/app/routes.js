@@ -72,7 +72,6 @@ module.exports = function(app, passport, io){
 	app.get('/connection.php', function(req, res){
 		exec("php connection.php", function (error, stdout, stderr) {
 			console.log(stdout);
-
 		});
 	});
 
@@ -83,10 +82,13 @@ module.exports = function(app, passport, io){
 	app.get('../javascript/pixi.min.js', function(req, res) {
 		res.sendFile(path.join(__dirname+'/../public/javascript/pixi.min.js'));
 	});
-	
+
+	app.get('../javascript/siteScript.js', function(req, res) {
+		res.sendFile(path.join(__dirname+'/../public/javascript/siteScript.js'));
+	});
 	
 	app.get('/favicon.ico', function(req, res) {
-		res.sendFile(path.join(__dirname+'/../public/html/favicon.ico'));
+		res.sendFile(path.join(__dirname+'/../public/php/favicon.ico'));
 	});
 
 	io.on('connection', function(client) {
