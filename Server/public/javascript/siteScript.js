@@ -1,3 +1,5 @@
+
+
 //For home page
 
 var slideIndex = 1;
@@ -63,4 +65,9 @@ function loadTable(){
 		document.querySelector("#highscoreBody").innerHTML += "<tr><td>" + i + "</td><td><img src='../pictures/logo.png' alt='Group Logo' height='35' width='35' style='margin-top:3px;'></td><td>User " + i +"</td><td>" + superScore + " U</td></tr>";
 		superScore = superScore - 19963*i;
 	}		
+}
+
+//For every page
+
+function loadUser(){
 }
