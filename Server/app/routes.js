@@ -38,11 +38,11 @@ module.exports = function(app, passport, io){
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		res.render('game.html', { user: req.user}); // Change to game.html if using HTML pages
+		res.render('game.html', { user: req.user});
 	});
 
 	app.get('/loginUnsuccesful', function(req, res) {
-		res.render('home.html'); // Change to game.html if using HTML pages
+		res.render('home.html');
 	});
 
 	app.get('/community.html', function(req, res) {
