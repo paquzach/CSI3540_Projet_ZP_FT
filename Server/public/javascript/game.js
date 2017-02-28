@@ -19,7 +19,6 @@
  renderer.view.style.transform = 'translate3d( -50%, -50%, 0 )';
 
  var stage = new PIXI.Container();
- 
 
  console.log(type);
 
@@ -50,6 +49,11 @@ setup();
   //attach sprite to stage etc...
 
   adventurer_idle = PIXI.Sprite.fromFrame("adventurer_idle.png");
+  adventurer_idle.anchor.x = 0.5;
+  adventurer_idle.x = 400;
+  adventurer_idle.y = 275;
+
+  console.log("adventurer_idle: " + adventurer_idle);
   stage.addChild(adventurer_idle);
 }
 

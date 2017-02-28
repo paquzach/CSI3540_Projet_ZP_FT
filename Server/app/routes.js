@@ -34,31 +34,38 @@ module.exports = function(app, passport, io){
 			console.log("==========================================");
 			console.log(" ");
 		}
-		res.render('home.html');
+		ourUser = getUserData(req.user);
+		res.render('home.html', { user: ourUser});
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		res.render('game.html', { user: req.user});
+		ourUser = getUserData(req.user);
+		res.render('game.html', { user: ourUser});
 	});
 
 	app.get('/loginUnsuccesful', function(req, res) {
-		res.render('home.html');
+		ourUser = getUserData(req.user);
+		res.render('home.html', { user: ourUser}); // Change to game.html if using HTML pages
 	});
 
 	app.get('/community.html', function(req, res) {
-		res.render('community.html');
+		ourUser = getUserData(req.user);
+		res.render('community.html', { user: ourUser});
 	});
 
 	app.get('/myAccount.html', function(req, res) {
-		res.render('myAccount.html');
+		ourUser = getUserData(req.user);
+		res.render('myAccount.html', { user: ourUser});
 	});
 
 	app.get('/highscore.html', function(req, res) {
-		res.render('highscore.html');
+		ourUser = getUserData(req.user);
+		res.render('highscore.html', { user: ourUser});
 	});
 
 	app.get('/game.html', function(req, res) {
-		res.render('game.html');
+		ourUser = getUserData(req.user);
+		res.render('game.html', { user: ourUser});
 	});
 
 	app.get('/login.html', function(req, res) {
@@ -88,7 +95,7 @@ module.exports = function(app, passport, io){
 	});
 	
 	app.get('/favicon.ico', function(req, res) {
-		res.sendFile(path.join(__dirname+'/../public/php/favicon.ico'));
+		res.sendFile(path.join(__dirname+'/../public/pictures/favicon.ico'));
 	});
 
 	io.on('connection', function(client) {
@@ -105,36 +112,30 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/');
 }
 
-function getUserData(callback) {
+function getUserData(googleUser) {
+	console.log("==============================");
 	var currentUser = {};
 	var userEmail = "";
 	var userName = "";
 	var userScore = 0;
 	var userTries = 0;
-	var exec = require("child_process").exec;
-	exec("php public/php/connection.php", function (error, stdout, stderr) {
-		console.log(stdout);
-		var lines = stdout.split(/\r\n|\r|\n/);
-		console.log("lines: " + lines);
-		console.log("lines.length: " + lines.length);
-		for(var i = 0;i < lines.length;i++){
-		    if (i==0) {
-		    	userEmail = lines[i].trim();
-		    } else if (i==1) {
-		    	userName = lines[i].trim();
-		    } else if (i==2) {
-		    	userScore = lines[i];
-		    } else if (i==3) {
-		    	userTries = lines[i];
-		    }
-		}
 
-		currentUser["email"] = userEmail;
-		currentUser["name"] = userName;
-		currentUser["score"] = userScore;
-		currentUser["tries"] = userTries;
+	if (typeof googleUser === "undefined" || googleUser == null) {
+		console.log("User is undefined");
+		currentUser["email"] = "none";
+		currentUser["name"] = "none";
+		currentUser["score"] = -1;
+		currentUser["tries"] = -1;
+	} else {
+		console.log("User is defined");
+		currentUser["email"] = googleUser.emails[0];
+		currentUser["name"] = googleUser.displayName;
+		currentUser["score"] = 420;
+		currentUser["tries"] = 69;
+	}
 
-		console.log('return currentUser: ' + currentUser.name);
-		callback(currentUser);
-	});
+	console.log("END OF USER BUILD");
+	console.log('return currentUser: ' + currentUser.name);
+	console.log("==============================");
+	return currentUser;
 }

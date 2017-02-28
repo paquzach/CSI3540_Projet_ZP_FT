@@ -179,7 +179,7 @@ body
 }
 
 .numbertext {
-  	color: #f2f2f2;
+  	color: #4d2600;
   	font-size: 15px;
   	font-weight: bold;
   	padding: 8px 12px;
@@ -352,7 +352,7 @@ li.dropdown {
 .dropdown-content {
     display: none;
     position: absolute;
-    top:98px;
+    top:108px;
     background-color: #84cf96;
     background: -webkit-radial-gradient(circle, #47b862, #84cf96, #47b862);
   	background: -o-radial-gradient(circle, #47b862, #84cf96, #47b862);
@@ -384,7 +384,7 @@ a.login
 	color:white;
 	position: relative;
 	font-size: 20px;
-	top:8px;
+	top:12px;
 	margin-right:20%;
 }
 

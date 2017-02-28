@@ -31,7 +31,7 @@ function getEmp() {
     
     conn.connect().then(function () {
         var req = new sql.Request(conn);
-        req.query("SELECT email FROM GameInfo").then(function (recordset) {
+        req.query("SELECT ppicture, username, highscore FROM GameInfo").then(function (recordset) {
             console.log("This is the result from the query on the database: ", recordset);
             conn.close();
         })
