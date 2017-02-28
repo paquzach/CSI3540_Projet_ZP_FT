@@ -25,7 +25,7 @@ var dbConfig = {
 };
 
 //Test for access to the database
-
+/*
 function getEmp() {
     var conn = new sql.Connection(dbConfig);
     
@@ -46,6 +46,7 @@ function getEmp() {
 }
 
 getEmp();
+*/
 
 ///////////////////////////////////////////////////////////////////////////
 
