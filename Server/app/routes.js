@@ -43,23 +43,28 @@ module.exports = function(app, passport, io){
 	});
 
 	app.get('/loginUnsuccesful', function(req, res) {
-		res.render('home.html'); // Change to game.html if using HTML pages
+		ourUser = getUserData(req.user);
+		res.render('home.html', { user: ourUser}); // Change to game.html if using HTML pages
 	});
 
 	app.get('/community.html', function(req, res) {
-		res.render('community.html');
+		ourUser = getUserData(req.user);
+		res.render('community.html', { user: ourUser});
 	});
 
 	app.get('/myAccount.html', function(req, res) {
-		res.render('myAccount.html');
+		ourUser = getUserData(req.user);
+		res.render('myAccount.html', { user: ourUser});
 	});
 
 	app.get('/highscore.html', function(req, res) {
-		res.render('highscore.html');
+		ourUser = getUserData(req.user);
+		res.render('highscore.html', { user: ourUser});
 	});
 
 	app.get('/game.html', function(req, res) {
-		res.render('game.html');
+		ourUser = getUserData(req.user);
+		res.render('game.html', { user: ourUser});
 	});
 
 	app.get('/login.html', function(req, res) {
@@ -108,14 +113,13 @@ function isLoggedIn(req, res, next) {
 
 function getUserData(googleUser) {
 	console.log("==============================");
-	console.log("STARTING USER BUILD (with google user: " + googleUser.displayName + ")");
 	var currentUser = {};
 	var userEmail = "";
 	var userName = "";
 	var userScore = 0;
 	var userTries = 0;
 
-	if (typeof googleUser === "undefined") {
+	if (typeof googleUser === "undefined" || googleUser == null) {
 		console.log("User is undefined");
 		currentUser["email"] = "none";
 		currentUser["name"] = "none";
