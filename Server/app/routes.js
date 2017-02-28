@@ -34,7 +34,8 @@ module.exports = function(app, passport, io){
 			console.log("==========================================");
 			console.log(" ");
 		}
-		res.render('home.html');
+		ourUser = getUserData(req.user);
+		res.render('home.html', { user: ourUser});
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {

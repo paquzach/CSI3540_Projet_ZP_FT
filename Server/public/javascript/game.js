@@ -1,5 +1,4 @@
  // Setting up stage renderer
-alert(user.name);
 
  var type = "WebGL"
  if(!PIXI.utils.isWebGLSupported()){

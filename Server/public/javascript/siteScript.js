@@ -2,11 +2,11 @@
 //For all pages
 var topBlock = document.getElementById("topBlock");
 
-if (name == "none"){
+if (user.name == "none"){
 	topBlock.innerHTML += "<a href='login.html' class='login'>Se connecter</a>";
 }
 else{
-	topBlock.innerHTML += "<a class='login'>Bienvenue, " + name + "</a>";
+	topBlock.innerHTML += "<a class='login'>Bienvenue, " + user.name + "</a>";
 }
 
 //For home page
