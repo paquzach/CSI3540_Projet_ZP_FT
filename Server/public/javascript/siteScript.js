@@ -1,5 +1,5 @@
+
 //For all pages
-var name = "none";
 var topBlock = document.getElementById("topBlock");
 
 if (name == "none"){

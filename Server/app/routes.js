@@ -88,7 +88,7 @@ module.exports = function(app, passport, io){
 	});
 	
 	app.get('/favicon.ico', function(req, res) {
-		res.sendFile(path.join(__dirname+'/../public/php/favicon.ico'));
+		res.sendFile(path.join(__dirname+'/../public/pictures/favicon.ico'));
 	});
 
 	io.on('connection', function(client) {
@@ -112,6 +112,7 @@ function getUserData(callback) {
 	var userScore = 0;
 	var userTries = 0;
 	var exec = require("child_process").exec;
+	
 	exec("php public/php/connection.php", function (error, stdout, stderr) {
 		console.log(stdout);
 		var lines = stdout.split(/\r\n|\r|\n/);
@@ -128,6 +129,7 @@ function getUserData(callback) {
 		    	userTries = lines[i];
 		    }
 		}
+
 
 		currentUser["email"] = userEmail;
 		currentUser["name"] = userName;
