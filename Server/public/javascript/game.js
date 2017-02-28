@@ -29,34 +29,35 @@
 
  // Game textures
 
- PIXI.loader
- 	.add("../gameTextures/redSquare.png")
- 	.load(setup);
+setup();
 
  function setup() {
- 	var redSquareSprite = new PIXI.Sprite(loadTexture["../gameTextures/redSquare.png"].texture);
-
- 	// position sprites
- 	redSquareSprite.x = 286;
- 	redSquareSprite.y = 165;
-
- 	// sprite size
-
- 	// redSquareSprite.width = 500;
- 	// redSquareSprite.height = 400;
- 	//			or
- 	// redSquareSprite.scale.set(0.5, 0.5);
-
-
- 	// rotation
- 	redSquareSprite.anchor.x = 0.5;
- 	redSquareSprite.anchor.y = 0.5;
- 	
- 	redSquareSprite.rotation = 0.5;
+ 	// Define the different sprites in the sprite sheet
+ 	//var sprite;
+	var loaderCharacter = new PIXI.loaders.Loader("../gameTextures/", 24);
+	loaderCharacter.add('character.png', 'character.json');
+	loaderCharacter.on('complete', onAssetLoad);
+	loaderCharacter.load();
 
 	// add texture to stage
-	stage.addChild(redSquareSprite);
+	//stage.addChild(redSquareSprite);
 
 	// render the stage
 	renderer.render(stage);
+ }
+
+ function onAssetLoad(){
+  //attach sprite to stage etc...
+
+  adventurer_idle = PIXI.Sprite.fromFrame("adventurer_idle.png");
+  stage.addChild(adventurer_idle);
+}
+
+ function loadAssets() {
+ 	var loader = new PIXI.JsonLoader(url);
+ 	loader.on('loaded', function(evt) {
+ 		//data is in evt.content.json    
+ 		evt.content.json
+ 	});
+ 	loader.load();
  }

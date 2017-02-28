@@ -1,0 +1,44 @@
+{"frames": {
+
+"spaceMeteors_001.png":
+{
+	"frame": {"x":215,"y":230,"w":215,"h":211},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":215,"h":211},
+	"sourceSize": {"w":215,"h":211}
+},
+"spaceMeteors_002.png":
+{
+	"frame": {"x":1,"y":224,"w":212,"h":218},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":212,"h":218},
+	"sourceSize": {"w":212,"h":218}
+},
+"spaceMeteors_003.png":
+{
+	"frame": {"x":223,"y":1,"w":214,"h":227},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":214,"h":227},
+	"sourceSize": {"w":214,"h":227}
+},
+"spaceMeteors_004.png":
+{
+	"frame": {"x":1,"y":1,"w":220,"h":221},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":220,"h":221},
+	"sourceSize": {"w":220,"h":221}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "meteors.png",
+	"format": "RGBA8888",
+	"size": {"w":438,"h":443},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c4e4dfe80aa1985ce1ff81327f60d2ee:8753450401d10d31296db8f98d998c4f:c2d9fb8ba8f67da6da86a926e353808f$"
+}
+}
