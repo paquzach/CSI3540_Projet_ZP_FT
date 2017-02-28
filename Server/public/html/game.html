@@ -3,7 +3,7 @@
 <head>
 	<title>Jeu</title>
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
-	<script src="../javascript/pixi.min.js"></script>
+	<script type="text/javascript" src="../javascript/pixi.min.js"></script>
 	<script type="text/javascript" src="../javascript/siteScript.js"></script>
 </head>
 <body onload="loadUser();">
@@ -28,8 +28,11 @@
 </div>
 </ul>
 
-<div style="width:800px; margin:0px auto;">
-  	<script type="text/javascript" src="../javascript/game.js"></script>
+<script>
+  var user = <%- JSON.stringify(user) %>;
+</script>
+<div style="width:800px; margin:0 auto;">
+    <script type="text/javascript" src="../javascript/game.js"></script>
 </div>
 
 <script>

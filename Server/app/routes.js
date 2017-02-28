@@ -38,7 +38,8 @@ module.exports = function(app, passport, io){
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		res.render('game.html', { user: req.user}); // Change to game.html if using HTML pages
+		ourUser = getUserData(req.user);
+		res.render('game.html', { user: ourUser});
 	});
 
 	app.get('/loginUnsuccesful', function(req, res) {
@@ -105,38 +106,31 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/');
 }
 
-function getUserData(callback) {
+function getUserData(googleUser) {
+	console.log("==============================");
+	console.log("STARTING USER BUILD (with google user: " + googleUser.displayName + ")");
 	var currentUser = {};
 	var userEmail = "";
 	var userName = "";
 	var userScore = 0;
 	var userTries = 0;
-	var exec = require("child_process").exec;
-	
-	exec("php public/php/connection.php", function (error, stdout, stderr) {
-		console.log(stdout);
-		var lines = stdout.split(/\r\n|\r|\n/);
-		console.log("lines: " + lines);
-		console.log("lines.length: " + lines.length);
-		for(var i = 0;i < lines.length;i++){
-		    if (i==0) {
-		    	userEmail = lines[i].trim();
-		    } else if (i==1) {
-		    	userName = lines[i].trim();
-		    } else if (i==2) {
-		    	userScore = lines[i];
-		    } else if (i==3) {
-		    	userTries = lines[i];
-		    }
-		}
 
+	if (typeof googleUser === "undefined") {
+		console.log("User is undefined");
+		currentUser["email"] = "none";
+		currentUser["name"] = "none";
+		currentUser["score"] = -1;
+		currentUser["tries"] = -1;
+	} else {
+		console.log("User is defined");
+		currentUser["email"] = googleUser.emails[0];
+		currentUser["name"] = googleUser.displayName;
+		currentUser["score"] = 420;
+		currentUser["tries"] = 69;
+	}
 
-		currentUser["email"] = userEmail;
-		currentUser["name"] = userName;
-		currentUser["score"] = userScore;
-		currentUser["tries"] = userTries;
-
-		console.log('return currentUser: ' + currentUser.name);
-		callback(currentUser);
-	});
+	console.log("END OF USER BUILD");
+	console.log('return currentUser: ' + currentUser.name);
+	console.log("==============================");
+	return currentUser;
 }
