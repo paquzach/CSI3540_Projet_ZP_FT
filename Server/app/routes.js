@@ -34,43 +34,35 @@ module.exports = function(app, passport, io){
 			console.log("==========================================");
 			console.log(" ");
 		}
-		var ourUser = getUserData(req.user);
-		res.render('home.html', { user: ourUser});
+		res.render('home.html', { user: getUserData(req.user)});
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		var ourUser = getUserData(req.user);
-		res.render('game.html', { user: ourUser});
+		res.render('game.html', { user: getUserData(req.user)});
 	});
 
 	app.get('/loginUnsuccesful', function(req, res) {
-		var ourUser = getUserData(req.user);
-		res.render('home.html', { user: ourUser}); // Change to game.html if using HTML pages
+		res.render('home.html', { user: getUserData(req.user)}); // Change to game.html if using HTML pages
 	});
 
 	app.get('/community.html', function(req, res) {
-		var ourUser = getUserData(req.user);
-		res.render('community.html', { user: ourUser});
+		res.render('community.html', { user: getUserData(req.user)});
 	});
 
 	app.get('/myAccount.html', function(req, res) {
-		var ourUser = getUserData(req.user);
-		res.render('myAccount.html', { user: ourUser});
+		res.render('myAccount.html', { user: getUserData(req.user)});
 	});
 
 	app.get('/highscore.html', function(req, res) {
-		var ourUser = getUserData(req.user);
-		res.render('highscore.html', { user: ourUser});
+		res.render('highscore.html', { user: getUserData(req.user)});
 	});
 
 	app.get('/game.html', function(req, res) {
-		var ourUser = getUserData(req.user);
-		res.render('game.html', { user: ourUser});
+		res.render('game.html', { user: getUserData(req.user)});
 	});
 
 	app.get('/login.html', function(req, res) {
-		var ourUser = getUserData(req.user);
-		res.render('login.html', { user: ourUser});
+		res.render('login.html');
 	});
 
 	app.get('/connection.php', function(req, res){
