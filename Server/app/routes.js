@@ -18,7 +18,7 @@ module.exports = function(app, passport, io){
 	//
 	
 	app.get('/', function(req, res) {
-		res.render('home.html');
+		res.render('home.html', {user: getUserData(req.user)});
 	});
 
 	app.get('/home.html', function(req, res) {
@@ -108,10 +108,6 @@ function isLoggedIn(req, res, next) {
 function getUserData(googleUser) {
 	console.log("==============================");
 	var currentUser = {};
-	var userEmail = "";
-	var userName = "";
-	var userScore = 0;
-	var userTries = 0;
 
 	if (typeof googleUser === "undefined" || googleUser == null) {
 		console.log("User is undefined");
@@ -119,12 +115,14 @@ function getUserData(googleUser) {
 		currentUser["name"] = "none";
 		currentUser["score"] = -1;
 		currentUser["tries"] = -1;
+		currentUser["picture"] = -1;
 	} else {
 		console.log("User is defined");
-		currentUser["email"] = googleUser.emails[0];
+		currentUser["email"] = googleUser.emails[0].value;
 		currentUser["name"] = googleUser.displayName;
-		currentUser["score"] = 420;
-		currentUser["tries"] = 69;
+		currentUser["score"] = 4200;
+		currentUser["tries"] = 68;
+		currentUser["picture"] = googleUser.photos[0].value;
 	}
 
 	console.log("END OF USER BUILD");

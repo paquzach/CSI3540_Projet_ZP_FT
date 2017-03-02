@@ -46,6 +46,21 @@ function showSlides(n) {
 }
 
 //For Account page
+if(user.name != "none")
+{
+	var n = document.getElementById("nicknameArea");
+	var p = document.getElementById("pictureArea");
+	var m = document.getElementById("emailArea");
+	var s = document.getElementById("scoreArea");
+	var t = document.getElementById("tryArea");
+
+	n.innerHTML = user.name;
+	p.src = user.picture;
+	m.innerHTML = user.email;
+	s.innerHTML = user.score + " U";
+	t.innerHTML = user.tries + " essais";
+}
+
 
 function nameChange(){
 		var elem = document.getElementById('nicknameArea');
@@ -70,7 +85,9 @@ function loadTable(){
 	var numUsers = 100;
 	var superScore = 100000000;
 	//Load current user data if it exists
-	document.querySelector("#highscoreFirstBody").innerHTML += "<tr style='background-color:#ffaa00;'><td>67</td><td><img src='../pictures/player_sample.jpg' alt='Group Logo' height='35' width='35' style='margin-top:3px;'></td><td>FranticZ (Current User)</td><td>13 400 U</td></tr>";
+	if(user.name != "none"){
+		document.querySelector("#highscoreFirstBody").innerHTML += "<tr style='background-color:#ffaa00;'><td>67</td><td><img src='"+ user.picture +"' alt='Group Logo' height='35' width='35' style='margin-top:3px;'></td><td>" + user.name + "</td><td>" + user.score + " U</td></tr>";
+	}
 	//load all users and their scores
 	for (var i = 1; i <= numUsers; i++) {
 		document.querySelector("#highscoreBody").innerHTML += "<tr><td>" + i + "</td><td><img src='../pictures/logo.png' alt='Group Logo' height='35' width='35' style='margin-top:3px;'></td><td>User " + i +"</td><td>" + superScore + " U</td></tr>";

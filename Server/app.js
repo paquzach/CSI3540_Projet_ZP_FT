@@ -21,17 +21,18 @@ var dbConfig = {
     database: "Meteorz",
     user: "sa",
     password: "RAPA999!",
-    port: 1433
+    port: 1433,
+    connectionTimeout: 16000
 };
 
 //Test for access to the database
-/*
+
 function getEmp() {
     var conn = new sql.Connection(dbConfig);
     
     conn.connect().then(function () {
         var req = new sql.Request(conn);
-        req.query("SELECT ppicture, username, highscore FROM GameInfo").then(function (recordset) {
+        req.query("SELECT email, ppicture, username, highscore FROM GameInfo").then(function (recordset) {
             console.log("This is the result from the query on the database: ", recordset);
             conn.close();
         })
@@ -44,9 +45,8 @@ function getEmp() {
         console.log(err);
 	});
 }
-
 getEmp();
-*/
+
 
 ///////////////////////////////////////////////////////////////////////////
 

@@ -29,20 +29,20 @@
 </div>
 </ul>
 
-<div class="siteBoxes" style="width: 900px; height: 600px; margin: 5px auto;">
+<div class="siteBoxes" style="width: 900px; max-height: 600px; min-height: 550px;  margin: 5px auto;">
 	<h1 style="margin-left: 10px;">Classements</h1>
 	<table class="highscoresTable">
 		<thead>
 			<tr>
-				<th>Rang</th>
-				<th colspan="2">Usager</th>
-				<th>Score</th>
+				<th style="width:100px;">Rang</th>
+				<th style="width:20px;" colspan="2" >Usager</th>
+				<th style="width:160px;">Score</th>
 			</tr>
 		</thead>
 		<tbody id="highscoreFirstBody">
 		</tbody>
 	</table>
-	<div style="height: 425px;; overflow-y: scroll; position: relative; ">
+	<div style="height: 425px; overflow-y: scroll; position: relative;">
 		<table class="highscoresTable" style="border-top:none;">
 			<tbody id="highscoreBody" style="border-bottom: 10px solid #40a558;">
 			</tbody>
