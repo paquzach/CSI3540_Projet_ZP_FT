@@ -27,7 +27,6 @@ module.exports = function(passport) {
 	    		newUser.google.token = accessToken;
 	    		newUser.google.name = profile.displayName;
 	    		newUser.google.email = profile.emails[0].value;
-
 	    		return done(null, profile);
 	    	});
 	    }

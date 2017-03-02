@@ -1,4 +1,6 @@
 var path = require("path");
+var nextPath = "game.html"; 
+var loggedIn = false;
 
 module.exports = function(app, passport, io){
 
@@ -11,8 +13,10 @@ module.exports = function(app, passport, io){
                                         failureRedirect: '/loginUnsuccesful' }));
 
 	app.get('/logout', function(req, res){
-		req.logout();
-		res.redirect('/loginUnsuccesful');
+		req.logout(); 
+		nextPath = "game.html"; 
+		loggedIn = false;
+		res.redirect('/home.html');
 	});
 
 	//
@@ -38,7 +42,8 @@ module.exports = function(app, passport, io){
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		res.render('game.html', { user: getUserData(req.user)});
+		loggedIn = true;
+		res.render(nextPath, { user: getUserData(req.user)});
 	});
 
 	app.get('/loginUnsuccesful', function(req, res) {
@@ -50,7 +55,13 @@ module.exports = function(app, passport, io){
 	});
 
 	app.get('/myAccount.html', function(req, res) {
-		res.render('myAccount.html', { user: getUserData(req.user)});
+		nextPath = "myAccount.html";
+		if (loggedIn){
+			res.render('myAccount.html', { user: getUserData(req.user)});
+		}
+		else{
+			res.render('login.html', { problem: "account"});
+		}
 	});
 
 	app.get('/highscore.html', function(req, res) {
@@ -58,11 +69,17 @@ module.exports = function(app, passport, io){
 	});
 
 	app.get('/game.html', function(req, res) {
-		res.render('game.html', { user: getUserData(req.user)});
+		nextPath = "game.html";
+		if (loggedIn){
+			res.render('game.html', { user: getUserData(req.user)});
+		}
+		else{
+			res.render('login.html', { problem: "game"});
+		}
 	});
 
 	app.get('/login.html', function(req, res) {
-		res.render('login.html');
+		res.render('login.html', { problem: "none"});
 	});
 
 	app.get('/connection.php', function(req, res){
