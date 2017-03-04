@@ -66,7 +66,7 @@ body
 	width: 860px;
 	height: auto;
 	background-color: #91d4a1;
-	border:3px solid #40a558;
+	border:3px solid #40a558; 
 	border-collapse: collapse;
 	margin: 0px 15px 0px 15px;
 }
@@ -74,7 +74,6 @@ body
 .highscoresTable tr {
 	height: 45px;
 	padding: 0px 0px 0px 0px;
-	
 }
 
 .highscoresTable th{

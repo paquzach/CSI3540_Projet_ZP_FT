@@ -79,7 +79,13 @@ module.exports = function(app, passport, io){
 	});
 
 	app.get('/login.html', function(req, res) {
-		res.render('login.html', { problem: "none"});
+		if(loggedIn){
+			res.render('home.html', { user: getUserData(req.user)});
+		}
+		else{
+			res.render('login.html', { problem: "none"});
+
+		}
 	});
 
 	app.get('/connection.php', function(req, res){

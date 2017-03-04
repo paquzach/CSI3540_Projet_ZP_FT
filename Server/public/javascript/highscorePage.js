@@ -1,7 +1,7 @@
 //For Highscore page
 
 function loadTable(){
-	var numUsers = 100;
+	var numUsers = 26;
 	var superScore = 100000000;
 	//Load current user data if it exists
 	if(user.name != "none"){
