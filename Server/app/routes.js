@@ -1,6 +1,26 @@
 var path = require("path");
 var nextPath = "game.html"; 
 var loggedIn = false;
+var currentUser = {};
+
+currentUser["email"] = "none";
+currentUser["name"] = "none";
+currentUser["score"] = -1;
+currentUser["tries"] = -1;
+currentUser["picture"] = -1;
+
+var sql = require("mssql");
+
+var dbConfig = {
+    server: "99.236.195.44",
+    database: "Meteorz",
+    user: "sa",
+    password: "RAPA999!",
+    port: 1433,
+    connectionTimeout: 16000
+};
+
+
 
 module.exports = function(app, passport, io){
 
@@ -10,19 +30,20 @@ module.exports = function(app, passport, io){
 
 	app.get('/auth/google/callback', 
     	passport.authenticate('google', { successRedirect: '/loginSuccesful',
-                                        failureRedirect: '/loginUnsuccesful' }));
+                                        failureRedirect: '/logoutSuccesful' }));
 
 	app.get('/logout', function(req, res){
 		req.logout(); 
 		nextPath = "game.html"; 
 		loggedIn = false;
-		res.redirect('/home.html');
+		res.redirect('/logoutSuccesful');
 	});
 
 	//
 	
 	app.get('/', function(req, res) {
-		res.render('home.html', {user: getUserData(req.user)});
+		userData(req.user);
+		res.render('home.html', {user: getUser()});
 	});
 
 	app.get('/home.html', function(req, res) {
@@ -38,26 +59,29 @@ module.exports = function(app, passport, io){
 			console.log("==========================================");
 			console.log(" ");
 		}
-		res.render('home.html', { user: getUserData(req.user)});
+		res.render('home.html', { user: getUser()});
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
 		loggedIn = true;
-		res.render(nextPath, { user: getUserData(req.user)});
+		userData(req.user);
+		res.render(nextPath, { user: getUser()});
 	});
 
-	app.get('/loginUnsuccesful', function(req, res) {
-		res.render('home.html', { user: getUserData(req.user)}); // Change to game.html if using HTML pages
+	app.get('/logoutSuccesful', function(req, res) {
+		userData(req.user);
+		res.render('home.html', { user: getUser()}); // Change to game.html if using HTML pages
 	});
 
 	app.get('/community.html', function(req, res) {
-		res.render('community.html', { user: getUserData(req.user)});
+		res.render('community.html', { user: getUser()});
 	});
 
 	app.get('/myAccount.html', function(req, res) {
 		nextPath = "myAccount.html";
+		userData(req.user);
 		if (loggedIn){
-			res.render('myAccount.html', { user: getUserData(req.user)});
+			res.render('myAccount.html', { user: getUser()});
 		}
 		else{
 			res.render('login.html', { problem: "account"});
@@ -65,13 +89,15 @@ module.exports = function(app, passport, io){
 	});
 
 	app.get('/highscore.html', function(req, res) {
-		res.render('highscore.html', { user: getUserData(req.user)});
+		userData(req.user);
+		res.render('highscore.html', { user: getUser()});
 	});
 
 	app.get('/game.html', function(req, res) {
 		nextPath = "game.html";
+		userData(req.user);
 		if (loggedIn){
-			res.render('game.html', { user: getUserData(req.user)});
+			res.render('game.html', { user: getUser()});
 		}
 		else{
 			res.render('login.html', { problem: "game"});
@@ -80,18 +106,12 @@ module.exports = function(app, passport, io){
 
 	app.get('/login.html', function(req, res) {
 		if(loggedIn){
-			res.render('home.html', { user: getUserData(req.user)});
+			res.render('home.html', { user: getUser()});
 		}
 		else{
 			res.render('login.html', { problem: "none"});
 
 		}
-	});
-
-	app.get('/connection.php', function(req, res){
-		exec("php connection.php", function (error, stdout, stderr) {
-			console.log(stdout);
-		});
 	});
 
 	app.get('../css/style.css', function(req, res) {
@@ -128,28 +148,82 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/');
 }
 
-function getUserData(googleUser) {
-	console.log("==============================");
-	var currentUser = {};
+function userData(googleUser) {
+    var conn = new sql.Connection(dbConfig);
+    var results = "";
 
-	if (typeof googleUser === "undefined" || googleUser == null) {
+	console.log("==============================");
+
+	if (googleUser == null) {
 		console.log("User is undefined");
+		/*currentUser["email"] = "none";
+		currentUser["name"] = "none";
+		currentUser["score"] = -1;
+		currentUser["tries"] = -1;
+		currentUser["picture"] = -1;*/
+		setUser(null);
+	} else {
+		console.log("User is defined");
+
+		conn.connect().then(function () {
+	        var req = new sql.Request(conn);
+	        req.input('userEmail', googleUser.emails[0].value);
+	        req.input('userName',  googleUser.displayName.split(" ", 1)[0]);
+	        //Check if the user is created, if not create him
+	        req.query`IF NOT EXISTS (SELECT * FROM GameInfo WHERE email = @userEmail)
+				BEGIN
+					INSERT INTO GameInfo
+					VALUES (@userEmail, @userName, null, 0, 0, 0);
+				END`.then(function () {
+	            conn.close();
+	        })
+	        .catch(function (err) {
+	            console.log(err);
+	            conn.close();
+	        });  
+	        //Select user from database and assign his info to user variable 
+	       	var req2 = new sql.Request(conn);
+	        req2.input('userEmail', googleUser.emails[0].value);
+	        req2.query`SELECT email, username, highscore, attemps FROM GameInfo WHERE email = @userEmail;`.then(function (recordset) 
+	        {
+				console.log("This is the result from the query on the database: \n", recordset);
+				setUser(recordset);
+	            conn.close();
+	        })
+	        .catch(function (err) {
+	            console.log(err);
+	            conn.close();
+	        });      
+	    })
+	    .catch(function (err) {
+	        console.log(err);
+		});
+	}
+	console.log("END OF USER BUILD");
+	console.log('return currentUser: ' + currentUser.name);
+	console.log("==============================");
+}
+
+function setUser(details)
+{
+	console.log("Were in setUser and this is what i have: \n", details);
+	if(details != null){
+		currentUser["email"] = details[0];
+		currentUser["name"] = "Stee" + details[1];
+		currentUser["score"] = details[2];
+		currentUser["tries"] = details[3];
+		console.log("All the things assigned here: ", currentUser["email"], currentUser["name"], currentUser["score"], currentUser["tries"]);
+		currentUser["picture"] = -1;
+	}
+	else{
 		currentUser["email"] = "none";
 		currentUser["name"] = "none";
 		currentUser["score"] = -1;
 		currentUser["tries"] = -1;
 		currentUser["picture"] = -1;
-	} else {
-		console.log("User is defined");
-		currentUser["email"] = googleUser.emails[0].value;
-		currentUser["name"] = googleUser.displayName;
-		currentUser["score"] = 4200;
-		currentUser["tries"] = 68;
-		currentUser["picture"] = googleUser.photos[0].value;
 	}
+}
 
-	console.log("END OF USER BUILD");
-	console.log('return currentUser: ' + currentUser.name);
-	console.log("==============================");
+function getUser(){
 	return currentUser;
 }
