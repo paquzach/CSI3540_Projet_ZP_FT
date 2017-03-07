@@ -19,49 +19,47 @@
  renderer.view.style.transform = 'translate3d( -50%, -50%, 0 )';
 
  var stage = new PIXI.Container();
+ var background;
+ var play_button_01;
+ var play_button_02;
 
  console.log(type);
 
- // Shorthands
-
- var loadTexture = PIXI.loader.resources;
-
  // Game textures
 
-setup();
+//setup();
 
  function setup() {
- 	// Define the different sprites in the sprite sheet
- 	//var sprite;
-	var loaderCharacter = new PIXI.loaders.Loader("../gameTextures/", 24);
-	loaderCharacter.add('character.png', 'character.json');
-	loaderCharacter.on('complete', onAssetLoad);
-	loaderCharacter.load();
 
-	// add texture to stage
-	//stage.addChild(redSquareSprite);
+	PIXI.loader.add('../gameTextures/', 'ui.json').load(function(loader, resources) {
+		initialiseScene();
+	});
+
+
 
 	// render the stage
 	renderer.render(stage);
  }
 
- function onAssetLoad(){
-  //attach sprite to stage etc...
-
-  adventurer_idle = PIXI.Sprite.fromFrame("adventurer_idle.png");
-  adventurer_idle.anchor.x = 0.5;
-  adventurer_idle.x = 400;
-  adventurer_idle.y = 275;
-
-  console.log("adventurer_idle: " + adventurer_idle);
-  stage.addChild(adventurer_idle);
+function initialiseScene() {
+  createObjects();
+  //animate();
 }
 
- function loadAssets() {
- 	var loader = new PIXI.JsonLoader(url);
- 	loader.on('loaded', function(evt) {
- 		//data is in evt.content.json    
- 		evt.content.json
- 	});
- 	loader.load();
- }
+function createObjects() {
+  //background = new PIXI.Sprite.fromFrame('bg.png');
+  play_button_01 = new PIXI.Sprite.fromFrame('blue_button04.png');
+  play_button_01.x = 400;
+  play_button_01.y = 275;
+
+  console.log("");
+  console.log("================================================");
+  console.log("play_button_01: " + play_button_01);
+  console.log("play_button_01.x: " + play_button_01.x);
+  console.log("play_button_01.y: " + play_button_01.y);
+  console.log("================================================");
+  console.log("");
+
+  play_button_02 = new PIXI.Sprite.fromFrame('blue_button03.png')
+  stage.addChild(play_button_01); 
+}
