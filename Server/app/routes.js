@@ -17,7 +17,7 @@ var dbConfig = {
     user: "sa",
     password: "RAPA999!",
     port: 1433,
-    connectionTimeout: 16000
+    connectionTimeout: 1000
 };
 
 
@@ -163,6 +163,13 @@ function userData(googleUser) {
 		currentUser["picture"] = -1;*/
 		setUser(null);
 	} else {
+
+		//for now lets have a mock user until databse and server query is available from other locations
+		currentUser["email"] = "metagame@mail.ca";
+		currentUser["name"] = "Rockman";
+		currentUser["score"] = 123456;
+		currentUser["tries"] = 3;
+		currentUser["picture"] = -1;
 		console.log("User is defined");
 
 		conn.connect().then(function () {
@@ -209,7 +216,7 @@ function setUser(details)
 	console.log("Were in setUser and this is what i have: \n", details);
 	if(details != null){
 		currentUser["email"] = details[0];
-		currentUser["name"] = "Stee" + details[1];
+		currentUser["name"] = "" + details[1];
 		currentUser["score"] = details[2];
 		currentUser["tries"] = details[3];
 		console.log("All the things assigned here: ", currentUser["email"], currentUser["name"], currentUser["score"], currentUser["tries"]);
