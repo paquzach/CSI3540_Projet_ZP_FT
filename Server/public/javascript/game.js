@@ -7,16 +7,25 @@
 
  PIXI.utils.sayHello(type)
 
+
+/*
+.slideshow-container
+{
+	border: 3px solid #ffdd00; 
+	border-radius: 5px;
+	position: relative;
+	margin: auto;
+	margin-top: 5px;
+}
+*/
  var renderer = PIXI.autoDetectRenderer(800, 550);
  renderer.view.style.border = "3px solid #ffdd00";
  renderer.backgroundColor = 0xffffff;
  renderer.view.style.position = "absolute";
  renderer.view.style.display = "block";
  document.body.appendChild(renderer.view);
- renderer.view.style.position = 'absolute';
- renderer.view.style.left = '50%';
- renderer.view.style.top = '50%';
- renderer.view.style.transform = 'translate3d( -50%, -50%, 0 )';
+ renderer.view.style.position = 'relative';
+ renderer.view.style.margin = "15px auto";
 
  var stage = new PIXI.Container();
  var background;
