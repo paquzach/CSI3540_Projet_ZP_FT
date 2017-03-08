@@ -34,7 +34,6 @@
 
  var play_button;
  var highscore_button;
- var grphcs;
 
  console.log(type);
 
@@ -71,7 +70,6 @@ function animate() {
 	if (currentScreen == "mainMenu") {
 		play_button.render();
 		highscore_button.render();
-		//stage.addChild(grphcs);
 	}
 
 	renderer.render(stage);
@@ -82,8 +80,9 @@ function animate() {
 // OBJECTS
 // Button
 function Button(x, y, width, height, light, dark, text) {
-	this.x = x;
-	this.y = y;
+	PIXI.Graphics.call(this);
+	this.x = x - (this.width / 2);
+	this.y = y - (this.height / 2);
 	this.width = width;
 	this.height = height;
 	
@@ -95,41 +94,44 @@ function Button(x, y, width, height, light, dark, text) {
 	this.dark.width = this.width;
 	this.dark.height = this.height;
 
-	this.light.x = this.x - (this.width / 2);
-	this.light.y = this.y - (this.height / 2);
-	this.dark.x = this.x - (this.width / 2);
-	this.dark.y = this.y - (this.height / 2);
-	
-	this.light.alpha = 1;
-	this.dark.alpha = 0;
+	this.light.x = 0 + (this.width / 2) - (this.light.width / 2);
+	this.light.y = 0 + (this.height / 2) - (this.light.height / 2);
+	this.dark.x = 0 + (this.width / 2) - (this.dark.width / 2);
+	this.dark.y = 0 + (this.height / 2) - (this.dark.height / 2);
 
 	this.text = new PIXI.Text(text, {font:"50px Arial", fill:"black", align:"center"});
-	this.text.x = this.x - (this.text.width / 2);
-	this.text.y = this.y - (this.text.height / 2);
-	this.text.alpha = 1;
+	this.text.x = 0 + (this.width / 2) - (this.text.width / 2);
+	this.text.y = 0 + (this.height / 2) - (this.text.height / 2);
+
+	this.addChild(this.light);
+	this.addChild(this.dark);
+	this.addChild(this.text);
+
+	this.interactive = true;
 	
 	this.mouseOver = false;
 
+
 	// methods
 	this.render = function() {
-		if (this.mouseOver) {
-			this.light.alpha = 0;
-			this.dark.alpha = 1;
-		} else {
-			this.light.alpha = 1;
-			this.dark.alpha = 0;
-		}
-		stage.addChild(this.light);
-		stage.addChild(this.dark);
-		stage.addChild(this.text);
+		this.removeChildren();
 
-		console.log("mouseOver: " + this.mouseOver);
+		if (this.mouseOver) {
+			this.addChild(this.dark);
+		} else {
+			this.addChild(this.light);
+		}
+		this.addChild(this.text);
+		stage.addChild(this);
 	}
 
 	this.mouseover = function(mouseData){
+		console.log("welp");
 		this.mouseOver = true;
 	}
-	this.mouseOut = function(mouseData){
+	this.mouseout = function(mouseData){
 		this.mouseOver = false;
 	}
 }
+Button.prototype = Object.create(PIXI.Container.prototype);
+Button.prototype.constructor = Button;
