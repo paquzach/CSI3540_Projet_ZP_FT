@@ -1,0 +1,20 @@
+{"frames": {
+
+"fruity_background.jpg":
+{
+	"frame": {"x":1,"y":1,"w":2560,"h":1600},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":2560,"h":1600},
+	"sourceSize": {"w":2560,"h":1600}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "fruity_background.png",
+	"format": "RGBA8888",
+	"size": {"w":2562,"h":1602},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:3e0e698a1e6bc0343c8c3997cd39dd13:39cd2a1e4b6fe07fd1ba0f438014d238:1432d111d277829f3d2f200cc5ba26ff$"
+}
+}
