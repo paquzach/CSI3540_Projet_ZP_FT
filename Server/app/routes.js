@@ -65,12 +65,12 @@ module.exports = function(app, passport, io){
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
 		loggedIn = true;
 		userData(req.user);
-		res.render(nextPath, { user: getUser()});
+		res.redirect(nextPath);
 	});
 
 	app.get('/logoutSuccesful', function(req, res) {
 		userData(req.user);
-		res.render('home.html', { user: getUser()}); // Change to game.html if using HTML pages
+		res.redirect('/home.html'); // Change to game.html if using HTML pages
 	});
 
 	app.get('/community.html', function(req, res) {
