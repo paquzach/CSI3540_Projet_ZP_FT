@@ -1,20 +1,20 @@
 {"frames": {
 
-"fruity_background.jpg":
+"fruity_background.png":
 {
-	"frame": {"x":1,"y":1,"w":2560,"h":1600},
+	"frame": {"x":1,"y":1,"w":800,"h":550},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":2560,"h":1600},
-	"sourceSize": {"w":2560,"h":1600}
+	"spriteSourceSize": {"x":0,"y":0,"w":800,"h":550},
+	"sourceSize": {"w":800,"h":550}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "fruity_background.png",
 	"format": "RGBA8888",
-	"size": {"w":2562,"h":1602},
+	"size": {"w":802,"h":552},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:3e0e698a1e6bc0343c8c3997cd39dd13:39cd2a1e4b6fe07fd1ba0f438014d238:1432d111d277829f3d2f200cc5ba26ff$"
+	"smartupdate": "$TexturePacker:SmartUpdate:82875af21f5758e6bc84053687a4436b:8458570751e51b3dee633b52b81db5c6:1432d111d277829f3d2f200cc5ba26ff$"
 }
 }
