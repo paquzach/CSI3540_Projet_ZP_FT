@@ -1,13 +1,5 @@
 var path = require("path");
 var nextPath = "game.html"; 
-var loggedIn = false;
-var currentUser = {};
-
-currentUser["email"] = "none";
-currentUser["name"] = "none";
-currentUser["score"] = -1;
-currentUser["tries"] = -1;
-currentUser["picture"] = -1;
 
 var sql = require("mssql");
 
@@ -35,19 +27,20 @@ module.exports = function(app, passport, io){
 	app.get('/logout', function(req, res){
 		req.logout(); 
 		nextPath = "game.html"; 
-		loggedIn = false;
 		res.redirect('/logoutSuccesful');
 	});
 
 	//
 	
 	app.get('/', function(req, res) {
-		userData(req.user);
-		res.render('home.html', {user: getUser()});
+		userData(req.user, function(userToSend) {
+			res.render('home.html', {user: userToSend});
+		});
 	});
 
 	app.get('/home.html', function(req, res) {
-		if(req.user == null) {
+		/*
+		if(!req.isAuthenticated()) {
 			console.log("User not logged in");
 		} else {
 			console.log(" ");
@@ -59,56 +52,62 @@ module.exports = function(app, passport, io){
 			console.log("==========================================");
 			console.log(" ");
 		}
-		res.render('home.html', { user: getUser()});
+		*/
+		userData(req.user, function(userToSend) {
+			res.render('home.html', { user: userToSend});
+		});
 	});
 	
 	app.get('/loginSuccesful', isLoggedIn, function(req, res) {
-		loggedIn = true;
-		userData(req.user);
 		res.redirect(nextPath);
 	});
 
 	app.get('/logoutSuccesful', function(req, res) {
-		userData(req.user);
-		res.redirect('/home.html'); // Change to game.html if using HTML pages
+		userData(req.user, function(userToSend) {
+			res.redirect('/home.html'); // Change to game.html if using HTML pages
+		});
 	});
 
 	app.get('/community.html', function(req, res) {
-		res.render('community.html', { user: getUser()});
+		userData(req.user, function(userToSend) {
+			res.render('community.html', { user: userToSend});
+		});
 	});
 
 	app.get('/myAccount.html', function(req, res) {
 		nextPath = "myAccount.html";
-		userData(req.user);
-		if (loggedIn){
-			res.render('myAccount.html', { user: getUser()});
-		}
-		else{
+		if (req.isAuthenticated()) {
+			userData(req.user, function(userToSend) {
+				res.render('myAccount.html', { user: userToSend});
+			});
+		} else {
 			res.render('login.html', { problem: "account"});
 		}
 	});
 
 	app.get('/highscore.html', function(req, res) {
-		userData(req.user);
-		res.render('highscore.html', { user: getUser()});
+		userData(req.user, function(userToSend) {
+			res.render('highscore.html', { user: userToSend});
+		});
 	});
 
 	app.get('/game.html', function(req, res) {
 		nextPath = "game.html";
-		userData(req.user);
-		if (loggedIn){
-			res.render('game.html', { user: getUser()});
-		}
-		else{
+		if (req.isAuthenticated()) {
+			userData(req.user, function(userToSend) {
+				res.render('game.html', { user: userToSend});
+			});
+		} else {
 			res.render('login.html', { problem: "game"});
 		}
 	});
 
 	app.get('/login.html', function(req, res) {
-		if(loggedIn){
-			res.render('home.html', { user: getUser()});
-		}
-		else{
+		if (req.isAuthenticated()) {
+			userData(req.user, function(userToSend) {
+				res.render('home.html', { user: userToSend});
+			});
+		} else {
 			res.render('login.html', { problem: "none"});
 		}
 	});
@@ -147,15 +146,22 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/');
 }
 
-function userData(googleUser) {
+function userData(googleUser, callback) {
     var conn = new sql.Connection(dbConfig);
     var results = "";
+
+    var currentUser = {};
+	currentUser["email"] = "none";
+	currentUser["name"] = "none";
+	currentUser["score"] = -1;
+	currentUser["tries"] = -1;
+	currentUser["picture"] = "../pictures/logo.png";
 
 	console.log("==============================");
 
 	if (googleUser == null) {
 		console.log("User is undefined");
-		setUser(null);
+		callback(currentUser);
 	} else {
 		console.log("User is defined");
 
@@ -181,45 +187,32 @@ function userData(googleUser) {
 	        req2.query`SELECT email, username, highscore, attemps FROM GameInfo WHERE email = @userEmail;`.then(function (recordset) 
 	        {
 	        	console.log("Were in the query script and this is recordset: \n", recordset);
-				setUser(recordset);
 	            conn.close();
+
+	            // populate user
+				var d = recordset[0];
+				currentUser["email"] = d.email.trim();
+				currentUser["name"] = "" + d.username.trim();
+				currentUser["score"] = d.highscore;
+				currentUser["tries"] = d.attemps;
+				console.log("All the things assigned here: ", currentUser["email"], currentUser["name"], currentUser["score"], currentUser["tries"]);
+				currentUser["picture"] = -1;
+
+	            callback(currentUser);
 	        })
 	        .catch(function (err) {
 	            console.log(err);
 	            conn.close();
+	            callback(currentUser);
 	        });      
 	    })
 	    .catch(function (err) {
 	        console.log(err);
+	        callback(currentUser);
 		});
 	}
 	console.log("END OF USER BUILD");
 	console.log('return currentUser: ' + currentUser.name);
 	console.log("==============================");
 
-}
-
-function setUser(details)
-{
-	console.log("Were in setUser and this is details: \n", details);
-	if(details != null){
-		var d = details[0];
-		currentUser["email"] = d.email.trim();
-		currentUser["name"] = "" + d.username.trim();
-		currentUser["score"] = d.highscore;
-		currentUser["tries"] = d.attemps;
-		console.log("All the things assigned here: ", currentUser["email"], currentUser["name"], currentUser["score"], currentUser["tries"]);
-		currentUser["picture"] = -1;
-	}
-	else{
-		currentUser["email"] = "none";
-		currentUser["name"] = "none";
-		currentUser["score"] = -1;
-		currentUser["tries"] = -1;
-		currentUser["picture"] = -1;
-	}
-}
-
-function getUser(){
-	return currentUser;
 }
