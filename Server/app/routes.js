@@ -16,7 +16,7 @@ var dbConfig = {
     database: "Meteorz",
     user: "sa",
     password: "RAPA999!",
-    port: 1433,
+    port: 8585,
     connectionTimeout: 1000
 };
 
@@ -110,7 +110,6 @@ module.exports = function(app, passport, io){
 		}
 		else{
 			res.render('login.html', { problem: "none"});
-
 		}
 	});
 
@@ -156,20 +155,8 @@ function userData(googleUser) {
 
 	if (googleUser == null) {
 		console.log("User is undefined");
-		/*currentUser["email"] = "none";
-		currentUser["name"] = "none";
-		currentUser["score"] = -1;
-		currentUser["tries"] = -1;
-		currentUser["picture"] = -1;*/
 		setUser(null);
 	} else {
-
-		//for now lets have a mock user until databse and server query is available from other locations
-		currentUser["email"] = "metagame@mail.ca";
-		currentUser["name"] = "Rockman";
-		currentUser["score"] = 123456;
-		currentUser["tries"] = 3;
-		currentUser["picture"] = -1;
 		console.log("User is defined");
 
 		conn.connect().then(function () {
@@ -193,7 +180,7 @@ function userData(googleUser) {
 	        req2.input('userEmail', googleUser.emails[0].value);
 	        req2.query`SELECT email, username, highscore, attemps FROM GameInfo WHERE email = @userEmail;`.then(function (recordset) 
 	        {
-				console.log("This is the result from the query on the database: \n", recordset);
+	        	console.log("Were in the query script and this is recordset: \n", recordset);
 				setUser(recordset);
 	            conn.close();
 	        })
@@ -209,16 +196,18 @@ function userData(googleUser) {
 	console.log("END OF USER BUILD");
 	console.log('return currentUser: ' + currentUser.name);
 	console.log("==============================");
+
 }
 
 function setUser(details)
 {
-	console.log("Were in setUser and this is what i have: \n", details);
+	console.log("Were in setUser and this is details: \n", details);
 	if(details != null){
-		currentUser["email"] = details[0];
-		currentUser["name"] = "" + details[1];
-		currentUser["score"] = details[2];
-		currentUser["tries"] = details[3];
+		var d = details[0];
+		currentUser["email"] = d.email.trim();
+		currentUser["name"] = "" + d.username.trim();
+		currentUser["score"] = d.highscore;
+		currentUser["tries"] = d.attemps;
 		console.log("All the things assigned here: ", currentUser["email"], currentUser["name"], currentUser["score"], currentUser["tries"]);
 		currentUser["picture"] = -1;
 	}
