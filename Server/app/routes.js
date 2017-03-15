@@ -12,11 +12,7 @@ var dbConfig = {
     connectionTimeout: 1000
 };
 
-
-
 module.exports = function(app, passport, io){
-
-
 	// Google
 	app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 
@@ -76,6 +72,22 @@ module.exports = function(app, passport, io){
 
 	app.get('/myAccount.html', function(req, res) {
 		nextPath = "myAccount.html";
+
+		if (req.param('userName') != undefined){
+			var newUserName = req.param('userName');
+			updateUserName(newUserName, req.user, function(){
+				//do nothing
+			});
+
+			var newHighscore = req.param('userScore');
+			updateHighscore(0, req.user, function(){
+				//do nothing	
+			});
+		}
+		else{
+			//do nothing
+		}
+
 		if (req.isAuthenticated()) {
 			userData(req.user, function(userToSend) {
 				res.render('myAccount.html', { user: userToSend});
@@ -86,9 +98,14 @@ module.exports = function(app, passport, io){
 	});
 
 	app.get('/highscore.html', function(req, res) {
-		userData(req.user, function(userToSend) {
-			res.render('highscore.html', { user: userToSend});
+		fetchRecords(function(allRows){
+			userData(req.user, function(userToSend) {
+				res.render('highscore.html', { user: userToSend, rows: allRows});
+			});
 		});
+
+
+		
 	});
 
 	app.get('/game.html', function(req, res) {
@@ -147,8 +164,8 @@ function isLoggedIn(req, res, next) {
 }
 
 function userData(googleUser, callback) {
-    var conn = new sql.Connection(dbConfig);
     var results = "";
+    var conn = new sql.Connection(dbConfig);
 
     var currentUser = {};
 	currentUser["email"] = "none";
@@ -215,4 +232,87 @@ function userData(googleUser, callback) {
 	console.log('return currentUser: ' + currentUser.name);
 	console.log("==============================");
 
+}
+
+function updateUserName(newName, googleUser, callback){
+	var conn = new sql.Connection(dbConfig);
+	
+	console.log("Entered update user name with: ", newName, ", ", googleUser.emails[0].value);
+
+	conn.connect().then(function () {
+        var req = new sql.Request(conn);
+        req.input('userEmail', googleUser.emails[0].value);
+        req.input('userName', newName);
+        //Check if the user is created, if not create him
+        req.query`UPDATE GameInfo
+			SET username= @userName
+			WHERE email = @userEmail;`.then(function () {
+            conn.close();
+            callback();
+        })
+        .catch(function (err) {
+            console.log(err);
+            conn.close();
+            callback();
+        });       
+    })
+    .catch(function (err) {
+        console.log(err);
+        callback();
+	});
+}
+
+function updateHighscore(newScore, googleUser, callback){
+	var conn = new sql.Connection(dbConfig);
+	
+	console.log("Entered update highscore with: ", newScore, ", ", googleUser.emails[0].value);
+
+	conn.connect().then(function () {
+        var req = new sql.Request(conn);
+        req.input('userEmail', googleUser.emails[0].value);
+        req.input('userScore', newScore);
+        //Check if the user is created, if not create him
+        req.query`UPDATE GameInfo 
+   				SET highscore = CASE WHEN @userScore > highscore 
+                   THEN @userScore
+                   ELSE highscore 
+                END
+ 				WHERE email = @userEmail;`.then(function () {
+            conn.close();
+            callback();
+        })
+        .catch(function (err) {
+            console.log(err);
+            conn.close();
+            callback();
+        });       
+    })
+    .catch(function (err) {
+        console.log(err);
+        callback();
+	});
+}
+
+function fetchRecords(callback){
+	var conn = new sql.Connection(dbConfig);
+	
+	console.log("Fetching all records from the table");
+
+	conn.connect().then(function () {
+        var req = new sql.Request(conn);
+        //Check if the user is created, if not create him
+        req.query`SELECT username, highscore FROM GameInfo ORDER BY highscore DESC;`.then(function (recordset) {
+            conn.close();
+            callback(recordset);
+        })
+        .catch(function (err) {
+            console.log(err);
+            conn.close();
+            callback(recordset);
+        });       
+    })
+    .catch(function (err) {
+        console.log(err);
+        callback(recordset);
+	});
 }

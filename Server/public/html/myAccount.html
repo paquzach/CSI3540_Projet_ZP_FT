@@ -26,24 +26,25 @@
 </div>
 </ul>
 
-<div class="siteBoxes" style="width: 60%;height: 400px; margin: 5px auto;">
+<div class="siteBoxes" style="width: 900px; min-height: 400px; margin: 5px auto;">
 	<h1 style="margin-left: 10px;">Mon compte</h1>
-	<div style="display: inline-block; width: 45%; height: 44%; margin-bottom: 85px;">
-		<img id="pictureArea" style="height: 240px; display: block; margin: 5px auto; border: 3px solid #40a558; border-radius: 5px;" src="../pictures/logo.png" />
+	<div style="display: inline-block; width: 45%;">
+		<img id="pictureArea" style="height: 240px; display: block; margin: 5px auto; border: 3px solid #40a558; border-radius: 5px;" src="../pictures/logo.png"/>
 	</div>
-	<div style="display: inline-block; width: 54%; height: 44%; margin-bottom: 85px; vertical-align: top;">
-		<p style="vertical-align: top; position: relative; font-size: 25px; font-weight: bold; margin: 5px 0px 0px 10px; line-height: 2.3; ">
+	<div style="display: inline-block; width: 54%; vertical-align: top;">
+		<form id = "nameForm" action="myAccount.html" method="get" style="vertical-align: top; position: relative; font-size: 25px; font-weight: bold; margin: 5px 0px 0px 10px; line-height: 2.1;">
 			Surnom: 
-			<textarea readonly="true;" id="nicknameArea" style="width: 250px; height: 25px; font-size: 22px; font-weight: bold;"></textarea>
-			<br>
+			<textarea readonly="true;" id="nicknameArea" name="userName" style="width: 50%; height: 25px; font-size: 22px; font-weight: bold;"></textarea>
+		</form>
+		<p style="vertical-align: top; position: relative; font-size: 25px; font-weight: bold; margin: 5px 0px 0px 10px; line-height: 2.3; ">
 			Couriel: <a id="emailArea" style="color: #0645ad;"></a><br>
 			Meilleur score: <a id="scoreArea"></a><br>
-			Nombre d'essais: <a id="tryArea"></a><br>
+			Nombre d'essais: <a id="tryArea"></a>
 		</p>
 	</div>
 	<div style="display: block; width: 50%; margin: 0px auto;">
-		<button id = "btnChange" style="width:49%; height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px;" onclick="nameChange();">Changer mon surnom</button>
-		<button id= "btnSubmit" disabled style="width:49%; height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px; float: right;" onclick="nameSubmit();">Soumettre</button>
+		<button id = "btnChange" style="width:49%; min-height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px;" onclick="nameChange();">Changer mon surnom</button>
+		<button id= "btnSubmit" disabled style="width:49%; min-height: 35px; margin: 5px 0px; border-radius: 5px; display: inline-block; background-color: #91d4a1; font-size: 18px; float: right;" onclick="nameSubmit();">Soumettre</button>
 	</div>
 </div>
 <script>
