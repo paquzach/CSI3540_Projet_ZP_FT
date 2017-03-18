@@ -25,7 +25,7 @@
  var interval = 1000/fps;
  var delta;
 
- var currentScreen = "mainMenu";
+ var currentScreen = "none";
 
  var fruity_background;
  var play_button;
@@ -43,10 +43,19 @@ function setup() {
 	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').load(function(loader, resources) {
 		loadMainMenu();
 	});
+
+	requestAnimationFrame(update);
 }
 
+function setupMenu() {
+
+	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').load(function(loader, resources) {
+		loadMainMenu();
+	});
+}
 function loadMainMenu() {
 	// PLAY BUTTON
+	currentScreen = "mainMenu";
 	fruity_background = new Background(400, 275, 800, 550,new PIXI.Sprite.fromFrame('fruity_background.png'));
 	play_button = new Button(280, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "PLAY");
 	highscore_button = new Button(520, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "HIGHSCORE");
@@ -63,7 +72,6 @@ function loadMainMenu() {
 		setupHighscore();
 	}
 
-	requestAnimationFrame(update);
 }
 function unloadMainMenu() {
 	PIXI.Sprite.fromFrame('fruity_background.png').destroy(true);
@@ -83,7 +91,7 @@ function setupHighscore() {
 
 }
 function loadHighscores() {
-	console.log("I WANT HIGHSCORES");
+	currentScreen = "highscores";
 }
 
 
