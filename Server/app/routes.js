@@ -1,4 +1,6 @@
 var path = require("path");
+var bodyParser = require('body-parser');
+
 var nextPath = "game.html"; 
 
 var sql = require("mssql");
@@ -13,6 +15,12 @@ var dbConfig = {
 };
 
 module.exports = function(app, passport, io){
+	// parse application/x-www-form-urlencoded 
+	app.use(bodyParser.urlencoded({ extended: true}))
+ 
+	// parse application/json 
+	app.use(bodyParser.json())
+
 	// Google
 	app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
 
@@ -73,21 +81,6 @@ module.exports = function(app, passport, io){
 	app.get('/myAccount.html', function(req, res) {
 		nextPath = "myAccount.html";
 
-		if (req.param('userName') != undefined){
-			var newUserName = req.param('userName');
-			updateUserName(newUserName, req.user, function(){
-				//do nothing
-			});
-
-			var newHighscore = req.param('userScore');
-			updateHighscore(0, req.user, function(){
-				//do nothing	
-			});
-		}
-		else{
-			//do nothing
-		}
-
 		if (req.isAuthenticated()) {
 			userData(req.user, function(userToSend) {
 				res.render('myAccount.html', { user: userToSend});
@@ -96,6 +89,30 @@ module.exports = function(app, passport, io){
 			res.render('login.html', { problem: "account"});
 		}
 	});
+
+	app.post('/myAccount.html', function(req, res){
+    	console.log("Somehow this is working ", req.body.userName);
+    	if (req.body.userName != undefined){
+			var newUserName = req.body.userName;
+			updateUserName(newUserName, req.user, function(){
+				//do nothing
+			});
+
+			/* This code is for when we want to update the highscore of a user
+			var newHighscore = req.param('userScore');
+			updateHighscore(0, req.user, function(){
+				//do nothing	
+			});
+			*/
+		}
+		else{
+			//do nothing
+		}
+		userData(req.user, function(userToSend) {
+			res.render('myAccount.html', { user: userToSend});
+		});
+	});
+
 
 	app.get('/highscore.html', function(req, res) {
 		fetchRecords(function(allRows){
@@ -181,6 +198,10 @@ function userData(googleUser, callback) {
 		callback(currentUser);
 	} else {
 		console.log("User is defined");
+		currentUser["email"] = "metagame@mail.ca";
+		currentUser["name"] = "Rockman";
+		currentUser["score"] = 100101;
+		currentUser["tries"] = 4;
 
 		conn.connect().then(function () {
 	        var req = new sql.Request(conn);

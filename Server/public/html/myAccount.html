@@ -32,9 +32,10 @@
 		<img id="pictureArea" style="height: 240px; display: block; margin: 5px auto; border: 3px solid #40a558; border-radius: 5px;" src="../pictures/logo.png"/>
 	</div>
 	<div style="display: inline-block; width: 54%; vertical-align: top;">
-		<form id = "nameForm" action="myAccount.html" method="get" style="vertical-align: top; position: relative; font-size: 25px; font-weight: bold; margin: 5px 0px 0px 10px; line-height: 2.1;">
+		<form id = "nameForm" action="myAccount.html" method="post" style="vertical-align: top; position: relative; font-size: 25px; font-weight: bold; margin: 25px 0px 0px 10px;" onsubmit="return false;">
 			Surnom: 
-			<textarea readonly="true;" id="nicknameArea" name="userName" style="width: 50%; height: 25px; font-size: 22px; font-weight: bold;"></textarea>
+			<input type="text" readonly="true" maxlength="15" id="nicknameArea" name="userName" style="width: 50%; height: 25px; font-size: 22px; font-weight: bold;">
+			<span id = "alertStar" style="font-size: 50px; color: red; top: -8px; position: absolute; display: none;">*</span>
 		</form>
 		<p style="vertical-align: top; position: relative; font-size: 25px; font-weight: bold; margin: 5px 0px 0px 10px; line-height: 2.3; ">
 			Couriel: <a id="emailArea" style="color: #0645ad;"></a><br>
