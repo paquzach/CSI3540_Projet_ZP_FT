@@ -8,10 +8,10 @@ var sql = require("mssql");
 var dbConfig = {
     server: "99.236.195.44",
     database: "Meteorz",
-    user: "sa",
-    password: "RAPA999!",
+    user: "fruitz",
+    password: "PITAHAYA123!",
     port: 8585,
-    connectionTimeout: 1000
+    connectionTimeout: 3000
 };
 
 module.exports = function(app, passport, io){
@@ -322,7 +322,7 @@ function fetchRecords(callback){
 	conn.connect().then(function () {
         var req = new sql.Request(conn);
         //Check if the user is created, if not create him
-        req.query`SELECT username, highscore FROM GameInfo ORDER BY highscore DESC;`.then(function (recordset) {
+        req.query`SELECT username, email, highscore FROM GameInfo ORDER BY highscore DESC;`.then(function (recordset) {
             conn.close();
             callback(recordset);
         })

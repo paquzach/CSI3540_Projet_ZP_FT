@@ -8,12 +8,11 @@ function loadTable(){
 		document.querySelector("#highscoreBody").innerHTML += "<tr><td>" + (i+1) + "</td><td><img src='../pictures/logo.png' alt='Group Logo' height='35' width='35' style='margin-top:3px;'></td><td>" + rows[i].username + "</td><td>" + rows[i].highscore + " U</td></tr>";
 		
 		if(user.name != "none"){
-			if (rows[i].username.trim() == user.name.trim()){
+			if (rows[i].email.trim() == user.email.trim()){
 				userRank = i+1;
 			}
 		}
 	}
-
 
 	//Load current user data if it exists
 	if(user.name != "none"){	
