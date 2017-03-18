@@ -27,9 +27,11 @@
 
  var currentScreen = "none";
 
+// Main menu
  var fruity_background;
  var play_button;
  var highscore_button;
+ var title;
 
 
  console.log(type);
@@ -40,21 +42,17 @@
 
 function setup() {
 
-	if (true) {
-		setupMenu()
-	} else {
-		setupHighscore();
-	}
+	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').load(function(loader, resources) {
+		if (true) {
+			loadMainMenu()
+		} else {
+			loadHighscore();
+		}
+	});
 
 	requestAnimationFrame(update);
 }
 
-function setupMenu() {
-
-	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').load(function(loader, resources) {
-		loadMainMenu();
-	});
-}
 function loadMainMenu() {
 	// PLAY BUTTON
 	currentScreen = "mainMenu";
@@ -65,33 +63,19 @@ function loadMainMenu() {
 
 	play_button.container.mousedown = function(mousedata) {
 		currentScreen = "none";
-		unloadMainMenu();
-		setupGame();
+		loadGame();
 	}
 	highscore_button.container.mousedown = function(mousedata) {
 		currentScreen = "none";
-		unloadMainMenu();
-		setupHighscore();
+		loadHighscores();
 	}
 
 }
-function unloadMainMenu() {
-	PIXI.Sprite.fromFrame('fruity_background.png').destroy(true);
-	PIXI.Sprite.fromFrame('green_button04.png').destroy(true);
-	PIXI.Sprite.fromFrame('green_button03.png').destroy(true);
-	PIXI.Sprite.fromFrame('title.png').destroy(true);
-}
 
-function setupGame() {
-
-}
 function loadGame() {
 	currentScreen = "game";
 }
 
-function setupHighscore() {
-
-}
 function loadHighscores() {
 	currentScreen = "highscores";
 }
@@ -247,4 +231,8 @@ function Title(x, y, width, height, title) {
 	this.render = function() {
 		stage.addChild(this.title);
 	}
+}
+
+function Banana(x, y, width, height, banana) {
+
 }
