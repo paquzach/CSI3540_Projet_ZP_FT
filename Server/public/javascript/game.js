@@ -30,6 +30,7 @@
  var fruity_background;
  var play_button;
  var highscore_button;
+ var leaderboard;
 
 
  console.log(type);
@@ -48,8 +49,8 @@ function setup() {
 function loadMainMenu() {
 	// PLAY BUTTON
 	fruity_background = new Background(400, 275, 800, 550,new PIXI.Sprite.fromFrame('fruity_background.png'));
-	play_button = new Button(280, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "PLAY");
-	highscore_button = new Button(520, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "HIGHSCORE");
+	play_button = new Button(280, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER");
+	highscore_button = new Button(520, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "CLASSEMENTS");
 	title = new Title (400, 150, 417, 153, new PIXI.Sprite.fromFrame('title.png'));
 
 	play_button.container.mousedown = function(mousedata) {
@@ -80,10 +81,30 @@ function loadGame() {
 }
 
 function setupHighscore() {
-
+	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures', '../gameTextures/leaderboard.json').add('../gameTextures/fruity_background.json').load(function(loader, resources) {
+		loadHighscores();
+	});
 }
 function loadHighscores() {
-	console.log("I WANT HIGHSCORES");
+	currentScreen = "highscores"
+
+	fruity_background = new Background(400, 275, 800, 550,new PIXI.Sprite.fromFrame('fruity_background.png'));
+	highscore_button = new Button(280, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "MENU");
+	play_button = new Button(520, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER");
+	leaderboard = new Title (400, 150, 417, 153, new PIXI.Sprite.fromFrame('leaderboard.png'));
+
+	highscore_button.container.mousedown = function(mousedata) {
+		currentScreen = "none";
+		unloadHighscores();
+		setupMenu();
+	}
+	play_button.container.mousedown = function(mousedata) {
+		currentScreen = "none";
+		unloadHighscores();
+		setupGame();
+	}
+
+	requestAnimationFrame(update);
 }
 
 
@@ -109,7 +130,10 @@ function update() {
 		} else if(currentScreen == "game") {
 
 		} else if (currentScreen == "highscores") {
-
+			fruity_background.render();
+			play_button.render();
+			highscore_button.render();
+			leaderboard.render();
 		}
 
 		if (currentScreen != "none") {
@@ -236,5 +260,22 @@ function Title(x, y, width, height, title) {
 	}
 	this.render = function() {
 		stage.addChild(this.title);
+	}
+}
+
+function Board(x, y, width, height, board) {
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+
+	this.board = board;
+	this.board.width = this.width;
+	this.board.height = this.height;
+	this.board.x = this.x - (this.board.width/2);
+	this.board.y = this.y - (this.board.height/2);
+
+	this.render = function() {
+		stage.addChild(this.board);
 	}
 }
