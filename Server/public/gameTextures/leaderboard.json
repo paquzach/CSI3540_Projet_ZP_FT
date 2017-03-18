@@ -1,0 +1,20 @@
+{"frames": {
+
+"leaderboard.png":
+{
+	"frame": {"x":1,"y":1,"w":640,"h":257},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":640,"h":257},
+	"sourceSize": {"w":640,"h":257}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "leaderboard.png",
+	"format": "RGBA8888",
+	"size": {"w":642,"h":259},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:468f937dc5b3fec3718a36833fc9cc2d:1a35d545f4004fb490a0acb8d79b2fa1:4fe47694e196b86d00aff58650e5f63b$"
+}
+}
