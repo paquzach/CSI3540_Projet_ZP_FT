@@ -71,7 +71,6 @@ function loadHighscores() {
 }
 
 
-
 // UPDATE FUNCTIONS
 function update() {
 

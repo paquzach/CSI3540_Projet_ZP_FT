@@ -11,15 +11,15 @@ var dbConfig = {
     user: "fruitz",
     password: "PITAHAYA123!",
     port: 8585,
-    connectionTimeout: 3000
+    connectionTimeout: 10000
 };
 
 module.exports = function(app, passport, io){
 	// parse application/x-www-form-urlencoded 
-	app.use(bodyParser.urlencoded({ extended: true}))
+	app.use(bodyParser.urlencoded({ extended: true}));
  
 	// parse application/json 
-	app.use(bodyParser.json())
+	app.use(bodyParser.json());
 
 	// Google
 	app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
@@ -128,8 +128,10 @@ module.exports = function(app, passport, io){
 	app.get('/game.html', function(req, res) {
 		nextPath = "game.html";
 		if (req.isAuthenticated()) {
-			userData(req.user, function(userToSend) {
-				res.render('game.html', { user: userToSend});
+			fetch5Records(function(topRows){
+				userData(req.user, function(userToSend) {
+					res.render('game.html', { user: userToSend, rows: topRows});
+				});
 			});
 		} else {
 			res.render('login.html', { problem: "game"});
@@ -323,6 +325,30 @@ function fetchRecords(callback){
         var req = new sql.Request(conn);
         //Check if the user is created, if not create him
         req.query`SELECT username, email, highscore FROM GameInfo ORDER BY highscore DESC;`.then(function (recordset) {
+            conn.close();
+            callback(recordset);
+        })
+        .catch(function (err) {
+            console.log(err);
+            conn.close();
+            callback(recordset);
+        });       
+    })
+    .catch(function (err) {
+        console.log(err);
+        callback(recordset);
+	});
+}
+
+function fetch5Records(callback){
+	var conn = new sql.Connection(dbConfig);
+	
+	console.log("Fetching top 5 records from the table");
+
+	conn.connect().then(function () {
+        var req = new sql.Request(conn);
+        //Check if the user is created, if not create him
+        req.query`SELECT TOP 5 username, email, highscore FROM GameInfo ORDER BY highscore DESC;`.then(function (recordset) {
             conn.close();
             callback(recordset);
         })
