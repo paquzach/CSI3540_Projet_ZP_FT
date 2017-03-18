@@ -19,11 +19,18 @@
  var stage = new PIXI.Container();
  stage.interactive = true;
 
+ var fps = 60;
+ var now;
+ var then = Date.now();
+ var interval = 1000/fps;
+ var delta;
+
  var currentScreen = "mainMenu";
 
  var fruity_background;
  var play_button;
  var highscore_button;
+
 
  console.log(type);
 
@@ -31,52 +38,68 @@
 
 //setup();
 
- function setup() {
+function setup() {
 
-	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').load(function(loader, resources) {
+	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').load(function(loader, resources) {
 		loadMainMenu();
 	});
- }
+}
 
 function loadMainMenu() {
 	// PLAY BUTTON
 	fruity_background = new Background(400, 275, 800, 550,new PIXI.Sprite.fromFrame('fruity_background.png'));
- 	play_button = new Button(280, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "PLAY");
-  	highscore_button = new Button(520, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "HIGHSCORE");
+	play_button = new Button(280, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "PLAY");
+	highscore_button = new Button(520, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "HIGHSCORE");
+	title = new Title (400, 150, 417, 153, new PIXI.Sprite.fromFrame('title.png'));
 
-  	play_button.container.mousedown = function(mousedata) {
-  		console.log("I WANT TO PLAY");
-  		loadGame();
-  	}
-  	highscore_button.container.mousedown = function(mousedata) {
-  		console.log("I WANT HIGHSCORES");
-  	}
+	play_button.container.mousedown = function(mousedata) {
+		loadGame();
+	}
+	highscore_button.container.mousedown = function(mousedata) {
+		loadHighscores();
+	}
 
- 	requestAnimationFrame(animate);
+	requestAnimationFrame(update);
 }
 
 function loadGame() {
-
+	console.log("I WANT TO PLAY");
 }
 
 function loadHighscores() {
-
+	console.log("I WANT HIGHSCORES");
 }
 
 
 
 // UPDATE FUNCTIONS
-function animate() {
-	stage.removeChildren();
-	//stage.update();
-	if (currentScreen == "mainMenu") {
-		fruity_background.render();
-		play_button.render();
-		highscore_button.render();
+function update() {
+
+	requestAnimationFrame(update);
+     
+    now = Date.now();
+    delta = now - then;
+
+    if (delta > interval) {
+    	// Updates
+    	title.update();
+
+
+    	// Renders
+		stage.removeChildren();
+		//stage.update();
+		if (currentScreen == "mainMenu") {
+			fruity_background.render();
+			play_button.render();
+			highscore_button.render();
+			title.render();
+		}
+
+		renderer.render(stage);
+
+		then = now - (delta % interval);
 	}
 
-	renderer.render(stage);
-    requestAnimationFrame(animate);
 }
 
 
@@ -163,5 +186,36 @@ function Background(x, y, width, height, background) {
 
 	this.render = function() {
 		stage.addChild(this.background);
+	}
+}
+
+function Title(x, y, width, height, title) {
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+
+	this.sinX = 0;
+	this.sinY = 0;
+
+	this.title = title;
+	this.title.width = this.width;
+	this.title.height = this.height;
+	this.title.x = this.x - (this.title.width/2);
+	this.title.y = this.y - (this.title.height/2);
+	this.originalY = this.title.y;
+
+	this.update = function() {
+		this.sinX += 0.05;
+
+		if (this.sinX > 360) {
+			this.sinX -= 360;
+		}
+
+		this.sinY = Math.sin(this.sinX);
+		this.title.y = this.originalY + (this.sinY*4);
+	}
+	this.render = function() {
+		stage.addChild(this.title);
 	}
 }
