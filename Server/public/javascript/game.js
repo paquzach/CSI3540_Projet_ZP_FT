@@ -53,6 +53,8 @@ function loadMainMenu() {
 	title = new Title (400, 150, 417, 153, new PIXI.Sprite.fromFrame('title.png'));
 
 	play_button.container.mousedown = function(mousedata) {
+		currentScreen = "none";
+		unloadMainMenu();
 		loadGame();
 	}
 	highscore_button.container.mousedown = function(mousedata) {
@@ -61,9 +63,15 @@ function loadMainMenu() {
 
 	requestAnimationFrame(update);
 }
+function unloadMainMenu() {
+	PIXI.Sprite.fromFrame('fruity_background.png').destroy(true);
+	PIXI.Sprite.fromFrame('green_button04.png').destroy(true);
+	PIXI.Sprite.fromFrame('green_button03.png').destroy(true);
+	PIXI.Sprite.fromFrame('title.png').destroy(true);
+}
 
 function loadGame() {
-	console.log("I WANT TO PLAY");
+	currentScreen = "game";
 }
 
 function loadHighscores() {
@@ -81,23 +89,27 @@ function update() {
     delta = now - then;
 
     if (delta > interval) {
-    	// Updates
-    	title.update();
-
-
-    	// Renders
 		stage.removeChildren();
-		//stage.update();
+
 		if (currentScreen == "mainMenu") {
+			// Updates
+    		title.update();
+
 			fruity_background.render();
 			play_button.render();
 			highscore_button.render();
 			title.render();
+		} else if(currentScreen == "game") {
+
+		} else if (currentScreen == "highscores") {
+
 		}
 
-		renderer.render(stage);
+		if (currentScreen != "none") {
+			renderer.render(stage);
 
-		then = now - (delta % interval);
+			then = now - (delta % interval);
+		}
 	}
 
 }
