@@ -55,10 +55,12 @@ function loadMainMenu() {
 	play_button.container.mousedown = function(mousedata) {
 		currentScreen = "none";
 		unloadMainMenu();
-		loadGame();
+		setupGame();
 	}
 	highscore_button.container.mousedown = function(mousedata) {
-		loadHighscores();
+		currentScreen = "none";
+		unloadMainMenu();
+		setupHighscore();
 	}
 
 	requestAnimationFrame(update);
@@ -70,10 +72,16 @@ function unloadMainMenu() {
 	PIXI.Sprite.fromFrame('title.png').destroy(true);
 }
 
+function setupGame() {
+
+}
 function loadGame() {
 	currentScreen = "game";
 }
 
+function setupHighscore() {
+
+}
 function loadHighscores() {
 	console.log("I WANT HIGHSCORES");
 }
