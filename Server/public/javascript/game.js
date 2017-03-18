@@ -40,9 +40,11 @@
 
 function setup() {
 
-	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').load(function(loader, resources) {
-		loadMainMenu();
-	});
+	if (true) {
+		setupMenu()
+	} else {
+		setupHighscore();
+	}
 
 	requestAnimationFrame(update);
 }
