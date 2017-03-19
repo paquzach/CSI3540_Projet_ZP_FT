@@ -34,6 +34,11 @@
  var title;
  var leaderboard;
 
+ // Classements
+ var nom1, nom2, nom3, nom4, nom5;
+ var score1, score2, score3, score4, score5;
+ var scoreMsg = null;
+ lastScore = 10000;
 
  console.log(type);
 
@@ -81,19 +86,63 @@ function loadHighscores() {
 	currentScreen = "highscores"
 
 	fruity_background = new Background(400, 275, 800, 550,new PIXI.Sprite.fromFrame('fruity_background.png'));
-	highscore_button = new Button(280, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "MENU");
-	play_button = new Button(520, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER");
-	leaderboard = new Title (400, 150, 417, 153, new PIXI.Sprite.fromFrame('leaderboard.png'));
+	play_button = new Button(280, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER");
+	highscore_button = new Button(520, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "MENU");
+	leaderboard = new Board (400, 170, 700, 280, new PIXI.Sprite.fromFrame('leaderboard.png'));
 
-	highscore_button.container.mousedown = function(mousedata) {
-		currentScreen = "none";
-		unloadHighscores();
-		setupMenu();
+	nom1 = new PIXI.Text(rows[0].username, {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	nom1.x = 125;
+	nom1.y = 86;
+	nom2 = new PIXI.Text(rows[1].username, {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	nom2.x = 125;
+	nom2.y = 132;
+	nom3 = new PIXI.Text(rows[2].username, {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	nom3.x = 125;
+	nom3.y = 177;
+	nom4 = new PIXI.Text(rows[3].username, {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	nom4.x = 125;
+	nom4.y = 222;
+	nom5 = new PIXI.Text(rows[4].username, {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	nom5.x = 125;
+	nom5.y = 270;
+
+	score1 = new PIXI.Text(rows[0].highscore + " U", {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	score1.x = 730 - score1.width;
+	score1.y = 86;
+	score2 = new PIXI.Text(rows[1].highscore + " U", {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	score2.x = 730 - score2.width;
+	score2.y = 132;
+	score3 = new PIXI.Text(rows[2].highscore + " U", {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	score3.x = 730 - score3.width;
+	score3.y = 177;
+	score4 = new PIXI.Text(rows[3].highscore + " U", {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	score4.x = 730 - score4.width;
+	score4.y = 222;
+	score5 = new PIXI.Text(rows[4].highscore + " U", {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
+	score5.x = 730 - score5.width;
+	score5.y = 270;
+
+	//check if there is a score from a previous game. If so, post it
+	if(lastScore > rows[4].highscore){
+		scoreMsg = new PIXI.Text("Felicitation! Vous avez atteint le top 5 avec un score de \n" + lastScore + " U la dernière joute!", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
+		scoreMsg.x = 400 - scoreMsg.width/2;
+		scoreMsg.y = 360;
 	}
+	else {
+		scoreMsg = new PIXI.Text("Pas pire! Vous avez eu un score de " + lastScore + " U \nla dernière joute.", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
+		scoreMsg.x = 400 - scoreMsg.width/2;
+		scoreMsg.y = 360;
+	}
+	
+
+
 	play_button.container.mousedown = function(mousedata) {
 		currentScreen = "none";
-		unloadHighscores();
-		setupGame();
+		loadGame();
+	}
+	highscore_button.container.mousedown = function(mousedata) {
+		currentScreen = "none";
+		loadMainMenu();
 	}
 
 	requestAnimationFrame(update);
@@ -273,5 +322,19 @@ function Board(x, y, width, height, board) {
 
 	this.render = function() {
 		stage.addChild(this.board);
+		stage.addChild(nom1);
+		stage.addChild(nom2);
+		stage.addChild(nom3);
+		stage.addChild(nom4);
+		stage.addChild(nom5);
+		stage.addChild(score1);
+		stage.addChild(score2);
+		stage.addChild(score3);
+		stage.addChild(score4);
+		stage.addChild(score5);
+		if (scoreMsg != null)
+		{
+			stage.addChild(scoreMsg);
+		}
 	}
 }
