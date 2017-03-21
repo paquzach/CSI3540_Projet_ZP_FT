@@ -1,0 +1,20 @@
+{"frames": {
+
+"sky.png":
+{
+	"frame": {"x":1,"y":1,"w":800,"h":550},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":800,"h":550},
+	"sourceSize": {"w":800,"h":550}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sky.png",
+	"format": "RGBA8888",
+	"size": {"w":802,"h":552},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:19150e8673e9619287bc17c289445dfd:35e9cdde015cafcef4b6f2c8563abad8:c43765cad6b5562374524f681ed3a242$"
+}
+}
