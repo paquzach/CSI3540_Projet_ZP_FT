@@ -1,5 +1,9 @@
 var expect = require("chai").expect;
 var request = require("request");
+var chai = require('chai');
+var chaiHttp = require('chai-http');
+
+chai.use(chaiHttp);
 
 //Ce test est seulement pour la requete de la page home
 describe("Routes of website", function() {
@@ -19,4 +23,26 @@ describe("Routes of website", function() {
       done();
     });
   });
+
+  /*
+  it('POST of userName from myAccount to myAccount', function(done) {
+    chai
+      .request("http://localhost:8282/myAccount.html")
+      .post("")
+      .send({'userName': 'Zach'})
+      .end(function(err, res, body){
+        expect(res.statusCode).to.equal(200);
+        
+        expect(res).to.be(json);
+        res.body.should.be.a('object');
+        res.body.should.have.property('SUCCESS');
+        res.body.SUCCESS.should.be.a('object');
+        res.body.SUCCESS.should.have.property('userName');
+        res.body.SUCCESS.userName.should.equal('Zach');
+        
+        done();
+      });
+  });
+  */
+
 });
