@@ -1,11 +1,11 @@
-Logo: ![Alt] (/F&Z/pictures/logo.png "Logo")
+Logo: ![Alt] (/server/pictures/logo.png "Logo")
 
 ##SYNOPSIS
 
 Ceci est notre projet de classe CSI 3540. Notre site web va contenir un jeux accessible au visiteur lorsqu'il est connecté a leurs compte Google.
-Le but du jeu est de survivre le plus longtemp possible sans ce faire frapper par les météorites qui tombe du ciel.
-Les classements vont être sauvgardé en ligne et accessible a tout joueur pour comparer sur une page dédié.
-Toute information sauvegardée va être lié avec le compte Google de l'utilisateur.
+Le but du jeu est de survivre le plus longtemp possible sans ce faire frapper par les fruits qui tombent du ciel.
+Les classements vont être sauvgardé en ligne et accessible à tous les joueurs pouvant se comparer sur une page dédié.
+Toute information sauvegardée va être lié avec le compte Google de l'utilisateur et enregistré sur une base de données.
 
 ##ACCÈS AU SITE WEB
 
@@ -22,9 +22,9 @@ Pour le moment, il est possible d'acceder notre site web avec l'adresse IP de no
 
 [Node.js] (https://nodejs.org/api/ "Node.js") pour la connection au serveur 
 
-[MySQL] (https://dev.mysql.com/doc/refman/5.7/en/ "MySQL") pour la création d'une base de données
+[MSSQL] (https://msdn.microsoft.com/en-us/library/dn198336.aspx "MSSQL") pour l'interaction avec la base de données
 
-[PHP] (http://php.net/manual/en/langref.php "PHP") language pour la collecte de données d'une base de données
+[SQL] (https://www.w3schools.com/sql/sql_quickref.asp "SQL") language pour la collecte de données d'une base de données
 
 [Google Identity Platform] (https://developers.google.com/identity/ "Google Identity Platform") pour la connection par compte google
 
