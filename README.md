@@ -1,4 +1,5 @@
-Logo: ![Alt] (/server/pictures/logo.png "Logo")
+# FruitZ - 2017
+![Alt](/Server/public/pictures/logo.png "Logo")
 
 ## SYNOPSIS
 
@@ -9,7 +10,7 @@ Toute information sauvegardée va être lié avec le compte Google de l'utilisat
 
 ## ACCÈS AU SITE WEB
 
-Pour le moment, il est possible d'acceder notre site web avec l'adresse IP de notre serveur. Voici le lien pour notre [site] (http://99.236.195.44:8282 "WEBSITE").
+Pour le moment, il est possible d'acceder notre site web avec l'adresse IP de notre serveur. Voici le lien pour notre [site](http://99.236.195.44:8282 "WEBSITE").
 
 
 ## MOTIVATION
