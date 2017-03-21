@@ -128,11 +128,12 @@ module.exports = function(app, passport, io){
 	app.get('/game.html', function(req, res) {
 		nextPath = "game.html";
 		if (req.isAuthenticated()) {
-			fetch5Records(function(topRows){
+			//fetch5Records(function(topRows){
 				userData(req.user, function(userToSend) {
-					res.render('game.html', { user: userToSend, rows: topRows});
+					//res.render('game.html', { user: userToSend, rows: topRows});
+					res.render('game.html', { user: userToSend, rows: [ {username:'a', highscore:2},{username:'a', highscore:2},{username:'a', highscore:2},{username:'a', highscore:2},{username:'a', highscore:2}]});
 				});
-			});
+			//});
 		} else {
 			res.render('login.html', { problem: "game"});
 		}

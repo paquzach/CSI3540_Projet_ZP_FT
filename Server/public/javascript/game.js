@@ -28,11 +28,11 @@
  var currentScreen = "none";
 
 // Main menu
- var fruity_background;
- var play_button;
- var highscore_button;
- var title;
- var leaderboard;
+var fruity_background;
+var play_button;
+var highscore_button;
+var title;
+var leaderboard;
 
  // Classements
  var nom1, nom2, nom3, nom4, nom5;
@@ -42,15 +42,15 @@
 
 
  // Game
- var test_banana;
- var test_coconut;
- var test_mango;
- var test_orange;
- var test_pear;
- var test_pineapple;
- var test_squash_spin;
- var test_squash_tumble;
- var test_watermelon;
+ var sky_and_ground;
+
+ var fruitCollection;
+
+ var fruitCount;
+ var maxFruits;
+ var fruitCooldown;
+ var fruitCooldownCounter;
+
 
  console.log(type);
 
@@ -91,15 +91,18 @@ function loadMainMenu() {
 
 function loadGame() {
 
-	test_banana = new Fruit(400, 100, 75, 121, new PIXI.Sprite.fromFrame('banana_01.png'), new PIXI.Sprite.fromFrame('banana_02.png'), new PIXI.Sprite.fromFrame('banana_03.png'), new PIXI.Sprite.fromFrame('banana_04.png'), new PIXI.Sprite.fromFrame('banana_05.png'));
- 	test_coconut = new Fruit(100, 225, 50, 65, new PIXI.Sprite.fromFrame('coconut_01.png'), new PIXI.Sprite.fromFrame('coconut_02.png'), new PIXI.Sprite.fromFrame('coconut_03.png'), new PIXI.Sprite.fromFrame('coconut_04.png'), new PIXI.Sprite.fromFrame('coconut_05.png'));
- 	test_mango = new Fruit(300, 225, 40, 60, new PIXI.Sprite.fromFrame('mango_01.png'), new PIXI.Sprite.fromFrame('mango_02.png'), new PIXI.Sprite.fromFrame('mango_03.png'), new PIXI.Sprite.fromFrame('mango_04.png'), new PIXI.Sprite.fromFrame('mango_05.png'));
- 	test_orange = new Fruit(500, 225, 60, 55, new PIXI.Sprite.fromFrame('orange_01.png'), new PIXI.Sprite.fromFrame('orange_02.png'), new PIXI.Sprite.fromFrame('orange_03.png'), new PIXI.Sprite.fromFrame('orange_04.png'), new PIXI.Sprite.fromFrame('orange_05.png'));
- 	test_pear = new Fruit(700, 225, 45, 60, new PIXI.Sprite.fromFrame('pear_01.png'), new PIXI.Sprite.fromFrame('pear_02.png'), new PIXI.Sprite.fromFrame('pear_03.png'), new PIXI.Sprite.fromFrame('pear_04.png'), new PIXI.Sprite.fromFrame('pear_05.png'));
- 	test_pineapple = new Fruit(100, 450, 75, 200, new PIXI.Sprite.fromFrame('pineapple_01.png'), new PIXI.Sprite.fromFrame('pineapple_02.png'), new PIXI.Sprite.fromFrame('pineapple_03.png'), new PIXI.Sprite.fromFrame('pineapple_04.png'), new PIXI.Sprite.fromFrame('pineapple_05.png'));
- 	test_squash_spin = new Fruit(300, 450, 80, 75, new PIXI.Sprite.fromFrame('squash_spin_01.png'), new PIXI.Sprite.fromFrame('squash_spin_02.png'), new PIXI.Sprite.fromFrame('squash_spin_03.png'), new PIXI.Sprite.fromFrame('squash_spin_04.png'), new PIXI.Sprite.fromFrame('squash_spin_05.png'));
- 	test_squash_tumble = new Fruit(500, 450, 80, 80, new PIXI.Sprite.fromFrame('squash_tumble_01.png'), new PIXI.Sprite.fromFrame('squash_tumble_02.png'), new PIXI.Sprite.fromFrame('squash_tumble_03.png'), new PIXI.Sprite.fromFrame('squash_tumble_04.png'), new PIXI.Sprite.fromFrame('squash_tumble_05.png'));
- 	test_watermelon = new Fruit(700, 450, 80, 75, new PIXI.Sprite.fromFrame('watermelon_01.png'), new PIXI.Sprite.fromFrame('watermelon_02.png'), new PIXI.Sprite.fromFrame('watermelon_03.png'), new PIXI.Sprite.fromFrame('watermelon_04.png'), new PIXI.Sprite.fromFrame('watermelon_05.png'));
+	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
+
+	fruitCount = 0;
+	maxFruits = 50;
+	fruitCooldown = 30;
+	fruitCooldownCounter = 0;
+	fruitCollection = [];
+	for (var i=0; i < maxFruits-1; i++) {
+		fruitCollection[i] = null;
+	}
+	createFruits();
+
 	currentScreen = "game";
 }
 
@@ -172,44 +175,30 @@ function loadHighscores() {
 function update() {
 
 	requestAnimationFrame(update);
-     
-    now = Date.now();
-    delta = now - then;
 
-    if (delta > interval) {
+	now = Date.now();
+	delta = now - then;
+
+	if (delta > interval) {
 		stage.removeChildren();
 
 		if (currentScreen == "mainMenu") {
 			// Updates
-    		title.update();
+			title.update();
 
     		// Renders
-			fruity_background.render();
-			play_button.render();
-			highscore_button.render();
-			title.render();
-		} else if(currentScreen == "game") {
+    		fruity_background.render();
+    		play_button.render();
+    		highscore_button.render();
+    		title.render();
+    	} else if(currentScreen == "game") {
 			// Updates
-			test_banana.update();
-			test_coconut.update();
- 			test_mango.update();
- 			test_orange.update();
- 			test_pear.update();
- 			test_pineapple.update();
- 			test_squash_spin.update();
- 			test_squash_tumble.update();
- 			test_watermelon.update();
+			createFruits();
+			updateAllFruits();
 
 			// Renders
-			test_banana.render();
-			test_coconut.render();
- 			test_mango.render();
- 			test_orange.render();
- 			test_pear.render();
- 			test_pineapple.render();
- 			test_squash_spin.render();
- 			test_squash_tumble.render();
- 			test_watermelon.render();
+			sky_and_ground.render();
+			renderAllFruits();
 		} else if (currentScreen == "highscores") {
 			fruity_background.render();
 			play_button.render();
@@ -352,14 +341,20 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 	this.animationSpeed = 5;
 	this.frameKeeper = 1;
 
+	this.xSpeed = (getRandomArbitrary(0, 70) / 10) - 4;
+	this.ySpeed = (getRandomArbitrary(4, 12));
+	this.angle = Math.atan(this.xSpeed/this.ySpeed) * (-1);
+
 	this.fruit_01 = fruit_01;
 	this.fruit_02 = fruit_02;
 	this.fruit_03 = fruit_03;
 	this.fruit_04 = fruit_04;
 	this.fruit_05 = fruit_05;
 
-	this.x = x;
-	this.y = y;
+	this.x = getRandomArbitrary(-10, 810);
+	this.y = getRandomArbitrary(-500, -150);
+	//this.x = x;
+	//this.y = y;
 	this.width = width;
 	this.height = height;
 
@@ -367,28 +362,56 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 	this.fruit_01.height = this.height;
 	this.fruit_01.x = this.x - (this.fruit_01.width/2);
 	this.fruit_01.y = this.y - (this.fruit_01.height/2);
+	this.fruit_01.anchor.set(0.5);
+	this.fruit_01.rotation = this.angle;
 
 	this.fruit_02.width = this.width;
 	this.fruit_02.height = this.height;
 	this.fruit_02.x = this.x - (this.fruit_02.width/2);
 	this.fruit_02.y = this.y - (this.fruit_02.height/2);
+	this.fruit_02.anchor.set(0.5)
+	this.fruit_02.rotation = this.angle;
 
 	this.fruit_03.width = this.width;
 	this.fruit_03.height = this.height;
 	this.fruit_03.x = this.x - (this.fruit_03.width/2);
 	this.fruit_03.y = this.y - (this.fruit_03.height/2);
+	this.fruit_03.anchor.set(0.5)
+	this.fruit_03.rotation = this.angle;
 
 	this.fruit_04.width = this.width;
 	this.fruit_04.height = this.height;
 	this.fruit_04.x = this.x - (this.fruit_04.width/2);
 	this.fruit_04.y = this.y - (this.fruit_04.height/2);
+	this.fruit_04.anchor.set(0.5)
+	this.fruit_04.rotation = this.angle;
 
 	this.fruit_05.width = this.width;
 	this.fruit_05.height = this.height;
 	this.fruit_05.x = this.x - (this.fruit_05.width/2);
 	this.fruit_05.y = this.y - (this.fruit_05.height/2);
+	this.fruit_05.anchor.set(0.5)
+	this.fruit_05.rotation = this.angle;
 
 	this.update = function() {
+		this.x += this.xSpeed;
+		this.y += this.ySpeed;
+
+		this.fruit_01.x = this.x - (this.fruit_01.width/2);
+		this.fruit_01.y = this.y - (this.fruit_01.height/2);
+
+		this.fruit_02.x = this.x - (this.fruit_02.width/2);
+		this.fruit_02.y = this.y - (this.fruit_02.height/2);
+
+		this.fruit_03.x = this.x - (this.fruit_03.width/2);
+		this.fruit_03.y = this.y - (this.fruit_03.height/2);
+
+		this.fruit_04.x = this.x - (this.fruit_04.width/2);
+		this.fruit_04.y = this.y - (this.fruit_04.height/2);
+
+		this.fruit_05.x = this.x - (this.fruit_05.width/2);
+		this.fruit_05.y = this.y - (this.fruit_05.height/2);
+
 		this.animationCounter++;
 
 		if (this.animationCounter > this.animationSpeed) {
@@ -397,6 +420,10 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 			if (this.frameKeeper > 5) {
 				this.frameKeeper = 1;
 			}
+		}
+
+		if (this.y > 700) {
+			removeFruit(this);
 		}
 	}
 
@@ -415,33 +442,69 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 	}
 }
 
-function Board(x, y, width, height, board) {
-	this.x = x;
-	this.y = y;
-	this.width = width;
-	this.height = height;
+function createFruits() {
+	fruitCooldownCounter++;
 
-	this.board = board;
-	this.board.width = this.width;
-	this.board.height = this.height;
-	this.board.x = this.x - (this.board.width/2);
-	this.board.y = this.y - (this.board.height/2);
+	if (fruitCooldownCounter > fruitCooldown && fruitCount != maxFruits) {
+		fruitCooldownCounter = 0;
 
-	this.render = function() {
-		stage.addChild(this.board);
-		stage.addChild(nom1);
-		stage.addChild(nom2);
-		stage.addChild(nom3);
-		stage.addChild(nom4);
-		stage.addChild(nom5);
-		stage.addChild(score1);
-		stage.addChild(score2);
-		stage.addChild(score3);
-		stage.addChild(score4);
-		stage.addChild(score5);
-		if (scoreMsg != null)
-		{
-			stage.addChild(scoreMsg);
+		var fruitToAdd;
+
+		var fruitType = Math.floor(getRandomArbitrary(0, 9));
+		if (fruitType == 0) {
+			fruitToAdd = getNewBanana(0, 0);
+		} else if (fruitType == 1) {
+			fruitToAdd = getNewCoconut(0, 0);
+		} else if (fruitType == 2) {
+			fruitToAdd = getNewMango(0, 0);
+		} else if (fruitType == 3) {
+			fruitToAdd = getNewOrange(0, 0);
+		} else if (fruitType == 4) {
+			fruitToAdd = getNewPear(0, 0);
+		} else if (fruitType == 5) {
+			fruitToAdd = getNewPineapple(0, 0);
+		} else if (fruitType == 6) {
+			fruitToAdd = getNewSquashSpin(0, 0);
+		} else if (fruitType == 7) {
+			fruitToAdd = getNewSquashTumble(0, 0);
+		} else {
+			fruitToAdd = getNewWatermelon(0, 0);
+		}
+
+		for (var i=0; i < maxFruits-1; i++) {
+			if (fruitCollection[i] == null) {
+				fruitCollection[i] = fruitToAdd;
+				fruitCount++;
+				console.log("fruitCount: " + fruitCount);
+				break;
+			}
+		}
+	}
+}
+
+function removeFruit(fruitToRemove) {
+	for (var i=0; i < maxFruits-1; i++) {
+		if (fruitCollection[i] == fruitToRemove) {
+			fruitCollection[i] = null;
+			fruitCount--;
+			console.log("fruitCount: " + fruitCount);
+			break;
+		}
+	}
+}
+
+function updateAllFruits() {
+	for (var i=0; i < maxFruits-1; i++) {
+		if (fruitCollection[i] != null) {
+			fruitCollection[i].update();
+		}
+	}
+}
+
+function renderAllFruits() {
+	for (var i=0; i < maxFruits-1; i++) {
+		if (fruitCollection[i] != null) {
+			fruitCollection[i].render();
 		}
 	}
 }
@@ -475,9 +538,44 @@ function getNewSquashSpin(x, y) {
 }
 
 function getNewSquashTumble(x, y) {
-	return new Fruit(x, y, 80, 80, new PIXI.Sprite.fromFrame('squash_tumble_01.png'), new PIXI.Sprite.fromFrame('squash_tumble_02.png'), new PIXI.Sprite.fromFrame('squash_tumble_03.png'), new PIXI.Sprite.fromFrame('squash_tumble_04.png'), new PIXI.Sprite.fromFrame('squash_tumble_05.png'));
+	return new Fruit(x, y, 80, 80, new PIXI.Sprite.fromFrame('squash_tumble_05.png'), new PIXI.Sprite.fromFrame('squash_tumble_04.png'), new PIXI.Sprite.fromFrame('squash_tumble_03.png'), new PIXI.Sprite.fromFrame('squash_tumble_02.png'), new PIXI.Sprite.fromFrame('squash_tumble_01.png'));
 }
 
 function getNewWatermelon(x, y) {
 	return new Fruit(x, y, 80, 75, new PIXI.Sprite.fromFrame('watermelon_01.png'), new PIXI.Sprite.fromFrame('watermelon_02.png'), new PIXI.Sprite.fromFrame('watermelon_03.png'), new PIXI.Sprite.fromFrame('watermelon_04.png'), new PIXI.Sprite.fromFrame('watermelon_05.png'));
+}
+
+function getRandomArbitrary(min, max) {
+	return Math.random() * (max - min) + min;
+}
+
+function Board(x, y, width, height, board) {
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+
+	this.board = board;
+	this.board.width = this.width;
+	this.board.height = this.height;
+	this.board.x = this.x - (this.board.width/2);
+	this.board.y = this.y - (this.board.height/2);
+
+	this.render = function() {
+		stage.addChild(this.board);
+		stage.addChild(nom1);
+		stage.addChild(nom2);
+		stage.addChild(nom3);
+		stage.addChild(nom4);
+		stage.addChild(nom5);
+		stage.addChild(score1);
+		stage.addChild(score2);
+		stage.addChild(score3);
+		stage.addChild(score4);
+		stage.addChild(score5);
+		if (scoreMsg != null)
+		{
+			stage.addChild(scoreMsg);
+		}
+	}
 }
