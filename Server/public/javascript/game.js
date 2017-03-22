@@ -19,9 +19,6 @@
  var stage = new PIXI.Container();
  stage.interactive = true;
 
-// Bump (2d collision enging)
- b = new Bump(PIXI);
-
  var fps = 60;
  var now;
  var then = Date.now();
