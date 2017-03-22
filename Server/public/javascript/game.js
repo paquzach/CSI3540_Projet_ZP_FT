@@ -20,7 +20,7 @@
  stage.interactive = true;
 
 // Bump (2d collision enging)
- b = new Bump(PIXI);
+ //b = new Bump(PIXI);
 
  var fps = 60;
  var now;
@@ -57,6 +57,8 @@ var leaderboard;
  var xSpeedMax;
  var ySpeedMin;
  var ySpeedMax;
+
+ var tim; 
 
  console.log(type);
 
@@ -98,6 +100,7 @@ function loadMainMenu() {
 function loadGame() {
 
 	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
+	tim = new Player(400, 480, 90, 115, new PIXI.Sprite.fromFrame('idle_left.png'));
 
 	xSpeedMin = 0;
 	xSpeedMax = 70;
@@ -204,12 +207,27 @@ function update() {
     		title.render();
     	} else if(currentScreen == "game") {
 			// Updates
+			window.onkeydown = function (e) {
+				var code = e.keyCode ? e.keyCode : e.which;
+    			if (code === 37) { //left key
+    				tim.update("l");
+    			} else if (code === 39) { //right key
+    				tim.update("r");
+    			}
+    			else {
+    				tim.update("n")//other & no key
+    			}
+			};
+
+
+			tim.update();
 			createFruits();
 			updateAllFruits();
 			checkCollisions();
 
 			// Renders
 			sky_and_ground.render();
+			tim.render();
 			renderAllFruits();
 		} else if (currentScreen == "highscores") {
 			fruity_background.render();
@@ -343,6 +361,45 @@ function Title(x, y, width, height, title) {
 	this.render = function() {
 		stage.addChild(this.title);
 	}
+}
+
+function Player(x, y, width, height, t){
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+
+	this.t = t;
+	this.t.width = this.width;
+	this.t.height = this.height;
+	this.t.x = this.x - (this.t.width/2);
+	this.t.y = this.y - (this.t.height/2);
+
+	this.update = function(direction){
+		if (direction == "l"){
+			this.x -= 20;
+		}
+		else if (direction == "r")
+		{
+			this.x += 20;
+		}
+		else {
+		}
+
+		this.t.x = this.x - (this.t.width/2)
+
+		if(this.x > 800){
+			this.x = 0;
+		}
+		else if(this.x < 0){
+			this.x = 800;
+		}
+	}
+
+	this.render = function() {
+		stage.addChild(this.t);
+	}
+
 }
 
 function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05) {
