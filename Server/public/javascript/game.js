@@ -19,6 +19,9 @@
  var stage = new PIXI.Container();
  stage.interactive = true;
 
+// Bump (2d collision enging)
+ b = new Bump(PIXI);
+
  var fps = 60;
  var now;
  var then = Date.now();
@@ -50,7 +53,10 @@ var leaderboard;
  var maxFruits;
  var fruitCooldown;
  var fruitCooldownCounter;
-
+ var xSpeedMin;
+ var xSpeedMax;
+ var ySpeedMin;
+ var ySpeedMax;
 
  console.log(type);
 
@@ -93,9 +99,14 @@ function loadGame() {
 
 	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
 
+	xSpeedMin = 0;
+	xSpeedMax = 70;
+	ySpeedMin = 4;
+	ySpeedMax = 12;
+
 	fruitCount = 0;
-	maxFruits = 50;
-	fruitCooldown = 30;
+	maxFruits = 9;
+	fruitCooldown = 19;
 	fruitCooldownCounter = 0;
 	fruitCollection = [];
 	for (var i=0; i < maxFruits-1; i++) {
@@ -195,6 +206,7 @@ function update() {
 			// Updates
 			createFruits();
 			updateAllFruits();
+			checkCollisions();
 
 			// Renders
 			sky_and_ground.render();
@@ -341,8 +353,8 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 	this.animationSpeed = 5;
 	this.frameKeeper = 1;
 
-	this.xSpeed = (getRandomArbitrary(0, 70) / 10) - 4;
-	this.ySpeed = (getRandomArbitrary(4, 12));
+	this.xSpeed = (getRandomArbitrary(xSpeedMin, xSpeedMax) / 10) - 4;
+	this.ySpeed = (getRandomArbitrary(ySpeedMin, ySpeedMax));
 	this.angle = Math.atan(this.xSpeed/this.ySpeed) * (-1);
 
 	this.fruit_01 = fruit_01;
@@ -392,6 +404,8 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 	this.fruit_05.y = this.y - (this.fruit_05.height/2);
 	this.fruit_05.anchor.set(0.5)
 	this.fruit_05.rotation = this.angle;
+
+	this.collisionBox
 
 	this.update = function() {
 		this.x += this.xSpeed;
@@ -475,7 +489,6 @@ function createFruits() {
 			if (fruitCollection[i] == null) {
 				fruitCollection[i] = fruitToAdd;
 				fruitCount++;
-				console.log("fruitCount: " + fruitCount);
 				break;
 			}
 		}
@@ -487,7 +500,6 @@ function removeFruit(fruitToRemove) {
 		if (fruitCollection[i] == fruitToRemove) {
 			fruitCollection[i] = null;
 			fruitCount--;
-			console.log("fruitCount: " + fruitCount);
 			break;
 		}
 	}
@@ -545,8 +557,20 @@ function getNewWatermelon(x, y) {
 	return new Fruit(x, y, 80, 75, new PIXI.Sprite.fromFrame('watermelon_01.png'), new PIXI.Sprite.fromFrame('watermelon_02.png'), new PIXI.Sprite.fromFrame('watermelon_03.png'), new PIXI.Sprite.fromFrame('watermelon_04.png'), new PIXI.Sprite.fromFrame('watermelon_05.png'));
 }
 
-function getRandomArbitrary(min, max) {
-	return Math.random() * (max - min) + min;
+//hit(spriteOne, spriteTwo, true, true)
+
+function checkCollisions() {
+	for (var i=0; i < maxFruits; i++) {
+		if (i < maxFruits-1) {
+			for (var j = (i+1); j < maxFruits; j++) {
+				if (maxFruits[i] != null && maxFruits[j] != null) {
+					if (b.hit(maxFruits[i].fruit_01, maxFruits[j].fruit_01)) {
+						console.log("Collision");
+					}
+				}
+			}
+		}
+	}
 }
 
 function Board(x, y, width, height, board) {
@@ -578,4 +602,8 @@ function Board(x, y, width, height, board) {
 			stage.addChild(scoreMsg);
 		}
 	}
+}
+
+function getRandomArbitrary(min, max) {
+	return Math.random() * (max - min) + min;
 }
