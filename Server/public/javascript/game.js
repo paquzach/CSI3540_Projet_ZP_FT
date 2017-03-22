@@ -60,6 +60,17 @@ var leaderboard;
 
  var tim; 
 
+ //Keyboard
+ var keys = {};
+ keys.LEFT = 37;
+ keys.RIGHT = 39;
+
+ document.body.onkeyup = 
+ document.body.onkeydown = function(e){
+ 	var codeCle = e.keyCode || e.which;
+ 	keys[codeCle] = e.type == 'keydown';
+ };
+
  console.log(type);
 
  // Game textures
@@ -100,7 +111,7 @@ function loadMainMenu() {
 function loadGame() {
 
 	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
-	tim = new Player(400, 480, 90, 115, new PIXI.Sprite.fromFrame('idle_left.png'));
+	tim = new Player(400, 470, 90, 115, new PIXI.Sprite.fromFrame('idle_left.png'));
 
 	xSpeedMin = 0;
 	xSpeedMax = 70;
@@ -207,19 +218,6 @@ function update() {
     		title.render();
     	} else if(currentScreen == "game") {
 			// Updates
-			window.onkeydown = function (e) {
-				var code = e.keyCode ? e.keyCode : e.which;
-    			if (code === 37) { //left key
-    				tim.update("l");
-    			} else if (code === 39) { //right key
-    				tim.update("r");
-    			}
-    			else {
-    				tim.update("n")//other & no key
-    			}
-			};
-
-
 			tim.update();
 			createFruits();
 			updateAllFruits();
@@ -375,18 +373,15 @@ function Player(x, y, width, height, t){
 	this.t.x = this.x - (this.t.width/2);
 	this.t.y = this.y - (this.t.height/2);
 
-	this.update = function(direction){
-		if (direction == "l"){
-			this.x -= 20;
+	this.update = function(){
+		if (keys[keys.LEFT]) {
+		    this.x -= 10;
+		    this.t.x = this.x - (this.t.width/2); 
 		}
-		else if (direction == "r")
-		{
-			this.x += 20;
+		if (keys[keys.RIGHT]) {
+			this.x += 10;
+			this.t.x = this.x - (this.t.width/2); 
 		}
-		else {
-		}
-
-		this.t.x = this.x - (this.t.width/2)
 
 		if(this.x > 800){
 			this.x = 0;
