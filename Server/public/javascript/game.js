@@ -346,6 +346,7 @@ function Title(x, y, width, height, title) {
 }
 
 function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05) {
+	
 	this.spinning_state = 0;
 	this.stationary_state = 1;
 	this.state = this.spinning_state;
