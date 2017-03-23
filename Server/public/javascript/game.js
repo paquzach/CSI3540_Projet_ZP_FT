@@ -55,17 +55,37 @@ var leaderboard;
  var ySpeedMin;
  var ySpeedMax;
 
- var tim; 
+ var tim;
 
  //Keyboard
- var keys = {};
- keys.LEFT = 37;
- keys.RIGHT = 39;
+ var left = keyboard(37);
+ var right = keyboard(39);
+ var up = keyboard(38);
 
- document.body.onkeyup = 
- document.body.onkeydown = function(e){
- 	var codeCle = e.keyCode || e.which;
- 	keys[codeCle] = e.type == 'keydown';
+ left.press = function() {
+ 	console.log("LEFT");
+ 	tim.direction("l");
+ 	tim.vitesseX(-10);
+ };
+ left.release = function() {
+ 	console.log("LEFT RELEASE");
+    tim.vitesseX(0);
+ };
+ right.press = function() {
+ 	console.log("RIGHT");
+ 	tim.direction("r");
+ 	tim.vitesseX(10);
+ };
+ right.release = function() {
+ 	console.log("RIGHT RELEASE");
+    tim.vitesseX(0);
+ };
+ up.press = function() {
+ 	console.log("UP");
+ 	tim.isJumping();
+ };
+ up.release = function() {
+ 	console.log("UP RELEASE");
  };
 
  console.log(type);
@@ -108,7 +128,7 @@ function loadMainMenu() {
 function loadGame() {
 
 	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
-	tim = new Player(400, 470, 90, 115, new PIXI.Sprite.fromFrame('idle_left.png'));
+	tim = new Player(400, 470, 90, 115); 
 
 	xSpeedMin = 0;
 	xSpeedMax = 70;
@@ -215,6 +235,7 @@ function update() {
     		title.render();
     	} else if(currentScreen == "game") {
 			// Updates
+
 			tim.update();
 			createFruits();
 			updateAllFruits();
@@ -224,6 +245,7 @@ function update() {
 			sky_and_ground.render();
 			tim.render();
 			renderAllFruits();
+
 		} else if (currentScreen == "highscores") {
 			fruity_background.render();
 			play_button.render();
@@ -358,26 +380,237 @@ function Title(x, y, width, height, title) {
 	}
 }
 
-function Player(x, y, width, height, t){
+function Player(x, y, width, height){
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
+	this.dir = "l";
+	this.vx = 0;
+	this.sinX = 0;
+	this.sinY = 0;
+	this.originalY = y;
+	this.jump = false;
+	this.frameKeeper = 1;
+	this.animationCounter = 0;
+	this.animationSpeed = 4;
 
-	this.t = t;
-	this.t.width = this.width;
-	this.t.height = this.height;
-	this.t.x = this.x - (this.t.width/2);
-	this.t.y = this.y - (this.t.height/2);
+	this.idleL = new PIXI.Sprite.fromFrame('idle_left.png');
+	this.idleR = new PIXI.Sprite.fromFrame('idle_right.png');
+
+	this.jumpL = new PIXI.Sprite.fromFrame('jump_left.png');
+	this.jumpR = new PIXI.Sprite.fromFrame('jump_right.png');
+
+	this.runL1 = new PIXI.Sprite.fromFrame('run_left_01.png');
+	this.runL2 = new PIXI.Sprite.fromFrame('run_left_02.png');
+	this.runL3 = new PIXI.Sprite.fromFrame('run_left_03.png');
+	this.runL4 = new PIXI.Sprite.fromFrame('run_left_04.png');
+	this.runL5 = new PIXI.Sprite.fromFrame('run_left_05.png');
+	this.runL6 = new PIXI.Sprite.fromFrame('run_left_06.png');
+	this.runL7 = new PIXI.Sprite.fromFrame('run_left_07.png');
+	this.runL8 = new PIXI.Sprite.fromFrame('run_left_08.png');
+	this.runL9 = new PIXI.Sprite.fromFrame('run_left_09.png');
+
+	this.runR1 = new PIXI.Sprite.fromFrame('run_right_01.png');
+	this.runR2 = new PIXI.Sprite.fromFrame('run_right_02.png');
+	this.runR3 = new PIXI.Sprite.fromFrame('run_right_03.png');
+	this.runR4 = new PIXI.Sprite.fromFrame('run_right_04.png');
+	this.runR5 = new PIXI.Sprite.fromFrame('run_right_05.png');
+	this.runR6 = new PIXI.Sprite.fromFrame('run_right_06.png');
+	this.runR7 = new PIXI.Sprite.fromFrame('run_right_07.png');
+	this.runR8 = new PIXI.Sprite.fromFrame('run_right_08.png');
+	this.runR9 = new PIXI.Sprite.fromFrame('run_right_09.png');
+	
+
+	this.idleL.width = this.width;
+	this.idleL.height = this.height;
+	this.idleL.x = this.x - (this.idleL.width/2);
+	this.idleL.y = this.y - (this.idleL.height/2);
+
+	this.idleR.width = this.width;
+	this.idleR.height = this.height;
+	this.idleR.x = this.x - (this.idleR.width/2);
+	this.idleR.y = this.y - (this.idleR.height/2);
+
+	//Jump left and right
+
+	this.jumpL.width = this.width;
+	this.jumpL.height = this.height;
+	this.jumpL.x = this.x - (this.jumpL.width/2);
+	this.jumpL.y = this.y - (this.jumpL.height/2);
+
+	this.jumpR.width = this.width;
+	this.jumpR.height = this.height;
+	this.jumpR.x = this.x - (this.jumpR.width/2);
+	this.jumpR.y = this.y - (this.jumpR.height/2);
+
+	//Run left 1-9
+
+	this.runL1.width = this.width;
+	this.runL1.height = this.height;
+	this.runL1.x = this.x - (this.runL1.width/2);
+	this.runL1.y = this.y - (this.runL1.height/2);
+
+	this.runL2.width = this.width;
+	this.runL2.height = this.height;
+	this.runL2.x = this.x - (this.runL2.width/2);
+	this.runL2.y = this.y - (this.runL2.height/2);
+
+	this.runL3.width = this.width;
+	this.runL3.height = this.height;
+	this.runL3.x = this.x - (this.runL3.width/2);
+	this.runL3.y = this.y - (this.runL3.height/2);
+
+	this.runL4.width = this.width;
+	this.runL4.height = this.height;
+	this.runL4.x = this.x - (this.runL4.width/2);
+	this.runL4.y = this.y - (this.runL4.height/2);
+
+	this.runL5.width = this.width;
+	this.runL5.height = this.height;
+	this.runL5.x = this.x - (this.runL5.width/2);
+	this.runL5.y = this.y - (this.runL5.height/2);
+
+	this.runL6.width = this.width;
+	this.runL6.height = this.height;
+	this.runL6.x = this.x - (this.runL6.width/2);
+	this.runL6.y = this.y - (this.runL6.height/2);
+
+	this.runL7.width = this.width;
+	this.runL7.height = this.height;
+	this.runL7.x = this.x - (this.runL7.width/2);
+	this.runL7.y = this.y - (this.runL7.height/2);
+
+	this.runL8.width = this.width;
+	this.runL8.height = this.height;
+	this.runL8.x = this.x - (this.runL8.width/2);
+	this.runL8.y = this.y - (this.runL8.height/2);
+
+	this.runL9.width = this.width;
+	this.runL9.height = this.height;
+	this.runL9.x = this.x - (this.runL9.width/2);
+	this.runL9.y = this.y - (this.runL9.height/2);
+
+	//Run right 1-9
+
+	this.runR1.width = this.width;
+	this.runR1.height = this.height;
+	this.runR1.x = this.x - (this.runR1.width/2);
+	this.runR1.y = this.y - (this.runR1.height/2);
+
+	this.runR2.width = this.width;
+	this.runR2.height = this.height;
+	this.runR2.x = this.x - (this.runR2.width/2);
+	this.runR2.y = this.y - (this.runR2.height/2);
+
+	this.runR3.width = this.width;
+	this.runR3.height = this.height;
+	this.runR3.x = this.x - (this.runR3.width/2);
+	this.runR3.y = this.y - (this.runR3.height/2);
+
+	this.runR4.width = this.width;
+	this.runR4.height = this.height;
+	this.runR4.x = this.x - (this.runR4.width/2);
+	this.runR4.y = this.y - (this.runR4.height/2);
+
+	this.runR5.width = this.width;
+	this.runR5.height = this.height;
+	this.runR5.x = this.x - (this.runR5.width/2);
+	this.runR5.y = this.y - (this.runR5.height/2);
+
+	this.runR6.width = this.width;
+	this.runR6.height = this.height;
+	this.runR6.x = this.x - (this.runR6.width/2);
+	this.runR6.y = this.y - (this.runR6.height/2);
+
+	this.runR7.width = this.width;
+	this.runR7.height = this.height;
+	this.runR7.x = this.x - (this.runR7.width/2);
+	this.runR7.y = this.y - (this.runR7.height/2);
+
+	this.runR8.width = this.width;
+	this.runR8.height = this.height;
+	this.runR8.x = this.x - (this.runR8.width/2);
+	this.runR8.y = this.y - (this.runR8.height/2);
+
+	this.runR9.width = this.width;
+	this.runR9.height = this.height;
+	this.runR9.x = this.x - (this.runR9.width/2);
+	this.runR9.y = this.y - (this.runR9.height/2);
 
 	this.update = function(){
-		if (keys[keys.LEFT]) {
-		    this.x -= 10;
-		    this.t.x = this.x - (this.t.width/2); 
+		this.x += this.vx;
+		this.y = this.originalY - (this.sinY * 200);
+
+		if (this.jump == true){
+			this.sinX += 0.05;
+			this.sinY = Math.sin(this.sinX);
+		}		
+		else{
+
 		}
-		if (keys[keys.RIGHT]) {
-			this.x += 10;
-			this.t.x = this.x - (this.t.width/2); 
+		if (this.sinX > 3.14){
+			this.jump = false;
+			this.sinX = 0;
+			this.sinY = 0;
+		}
+
+		this.idleL.x = this.x - (this.idleL.width/2);
+		this.idleL.y = this.y - (this.idleL.height/2); 
+		this.idleR.x = this.x - (this.idleR.width/2); 
+		this.idleR.y = this.y - (this.idleL.height/2);
+
+		this.jumpL.x = this.x - (this.jumpL.width/2);
+		this.jumpL.y = this.y - (this.jumpL.height/2);
+		this.jumpR.x = this.x - (this.jumpR.width/2);
+		this.jumpR.y = this.y - (this.jumpR.height/2);
+
+		this.runL1.x = this.x - (this.runL1.width/2);
+		this.runL1.y = this.y - (this.runL1.height/2);
+		this.runL2.x = this.x - (this.runL2.width/2);
+		this.runL2.y = this.y - (this.runL2.height/2);
+		this.runL3.x = this.x - (this.runL3.width/2);
+		this.runL3.y = this.y - (this.runL3.height/2);
+		this.runL4.x = this.x - (this.runL4.width/2);
+		this.runL4.y = this.y - (this.runL4.height/2);
+		this.runL5.x = this.x - (this.runL5.width/2);
+		this.runL5.y = this.y - (this.runL5.height/2);
+		this.runL6.x = this.x - (this.runL6.width/2);
+		this.runL6.y = this.y - (this.runL6.height/2);
+		this.runL7.x = this.x - (this.runL7.width/2);
+		this.runL7.y = this.y - (this.runL7.height/2);
+		this.runL8.x = this.x - (this.runL8.width/2);
+		this.runL8.y = this.y - (this.runL8.height/2);
+		this.runL9.x = this.x - (this.runL9.width/2);
+		this.runL9.y = this.y - (this.runL9.height/2);
+
+		this.runR1.x = this.x - (this.runR1.width/2);
+		this.runR1.y = this.y - (this.runR1.height/2);
+		this.runR2.x = this.x - (this.runR2.width/2);
+		this.runR2.y = this.y - (this.runR2.height/2);
+		this.runR3.x = this.x - (this.runR3.width/2);
+		this.runR3.y = this.y - (this.runR3.height/2);
+		this.runR4.x = this.x - (this.runR4.width/2);
+		this.runR4.y = this.y - (this.runR4.height/2);
+		this.runR5.x = this.x - (this.runR5.width/2);
+		this.runR5.y = this.y - (this.runR5.height/2);
+		this.runR6.x = this.x - (this.runR6.width/2);
+		this.runR6.y = this.y - (this.runR6.height/2);
+		this.runR7.x = this.x - (this.runR7.width/2);
+		this.runR7.y = this.y - (this.runR7.height/2);
+		this.runR8.x = this.x - (this.runR8.width/2);
+		this.runR8.y = this.y - (this.runR8.height/2);
+		this.runR9.x = this.x - (this.runR9.width/2);
+		this.runR9.y = this.y - (this.runR9.height/2);
+
+		this.animationCounter++;
+
+		if (this.animationCounter > this.animationSpeed) {
+			this.animationCounter = 0;
+			this.frameKeeper++;
+			if (this.frameKeeper > 9) {
+				this.frameKeeper = 1;
+			}
 		}
 
 		if(this.x > 800){
@@ -389,7 +622,72 @@ function Player(x, y, width, height, t){
 	}
 
 	this.render = function() {
-		stage.addChild(this.t);
+		if (this.dir == "l" && this.vx == 0 & this.y == this.originalY){
+			stage.addChild(this.idleL);
+		}
+		else if (this.dir == "r" && this.vx == 0 && this.y == this.originalY){
+			stage.addChild(this.idleR);
+		}
+		else if (this.dir == "l" && this.y != this.originalY){
+			stage.addChild(this.jumpL);
+		}
+		else if (this.dir == "r" && this.y != this.originalY){
+			stage.addChild(this.jumpR);
+		}
+		else if (this.dir == "l" && this.vx != 0 && this.y == this.originalY){
+			if (this.frameKeeper == 1) {
+				stage.addChild(this.runL1);
+			} else if (this.frameKeeper == 2) {
+				stage.addChild(this.runL2);
+			} else if (this.frameKeeper == 3) {
+				stage.addChild(this.runL3);
+			} else if (this.frameKeeper == 4) {
+				stage.addChild(this.runL4);
+			} else if (this.frameKeeper == 5) {
+				stage.addChild(this.runL5);
+			} else if (this.frameKeeper == 6) {
+				stage.addChild(this.runL6);
+			} else if (this.frameKeeper == 7) {
+				stage.addChild(this.runL7);
+			} else if (this.frameKeeper == 8) {
+				stage.addChild(this.runL8);
+			} else if (this.frameKeeper == 9) {
+				stage.addChild(this.runL9);
+			}
+		}
+		else if (this.dir == "r" && this.vx != 0 && this.y == this.originalY){
+			if (this.frameKeeper == 1) {
+				stage.addChild(this.runR1);
+			} else if (this.frameKeeper == 2) {
+				stage.addChild(this.runR2);
+			} else if (this.frameKeeper == 3) {
+				stage.addChild(this.runR3);
+			} else if (this.frameKeeper == 4) {
+				stage.addChild(this.runR4);
+			} else if (this.frameKeeper == 5) {
+				stage.addChild(this.runR5);
+			} else if (this.frameKeeper == 6) {
+				stage.addChild(this.runR6);
+			} else if (this.frameKeeper == 7) {
+				stage.addChild(this.runR7);
+			} else if (this.frameKeeper == 8) {
+				stage.addChild(this.runR8);
+			} else if (this.frameKeeper == 9) {
+				stage.addChild(this.runR9);
+			}
+		}
+	}
+
+	this.vitesseX = function(vitx){
+		this.vx = vitx;
+	}
+
+	this.isJumping = function(vity){
+		this.jump = true;
+	}
+
+	this.direction = function(x){
+		this.dir = x;
 	}
 
 }
@@ -656,4 +954,45 @@ function Board(x, y, width, height, board) {
 
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
+}
+
+function keyboard(keyCode) {
+	var key = {};
+	key.code = keyCode;
+	key.isDown = false;
+	key.isUp = true;
+	key.press = undefined;
+	key.release = undefined;
+
+	key.downHandler = function(event) {
+		if (event.keyCode === key.code) {
+			if (key.isUp && key.press) {
+				key.press();
+			}
+			key.isDown = true;
+			key.isUp = false;
+		}
+		event.preventDefault();
+	};
+
+	key.upHandler = function(event) {
+		if (event.keyCode === key.code) {
+			if (key.isDown && key.release) 
+			{
+				key.release();
+			}
+			key.isDown = false;
+			key.isUp = true;
+		}
+		event.preventDefault();
+	};
+
+  //Attach event listeners
+  window.addEventListener(
+  	"keydown", key.downHandler.bind(key), false
+  	);
+  window.addEventListener(
+  	"keyup", key.upHandler.bind(key), false
+  	);
+  return key;
 }
