@@ -58,27 +58,41 @@ var leaderboard;
  var tim;
 
  //Keyboard
+
+ //Si tim va vers la droite et on release la droite, arete. Sinon ignore 
  var left = keyboard(37);
  var right = keyboard(39);
  var up = keyboard(38);
 
  left.press = function() {
  	console.log("LEFT");
- 	tim.direction("l");
- 	tim.vitesseX(-10);
+ 	if (!left.isDown){
+ 		tim.moveDirection("l");
+ 	}
+ 	else{
+ 		left.release();
+ 	}
  };
  left.release = function() {
  	console.log("LEFT RELEASE");
-    tim.vitesseX(0);
+ 	if (!right.isDown) {
+ 		tim.stopRunning();
+    }
  };
  right.press = function() {
  	console.log("RIGHT");
- 	tim.direction("r");
- 	tim.vitesseX(10);
+ 	if (!right.isDown){
+ 		tim.moveDirection("r");
+ 	}
+ 	else{
+ 		right.release();
+ 	}
  };
  right.release = function() {
  	console.log("RIGHT RELEASE");
-    tim.vitesseX(0);
+ 	if (!left.isDown) {
+      tim.stopRunning();
+    }
  };
  up.press = function() {
  	console.log("UP");
@@ -678,16 +692,24 @@ function Player(x, y, width, height){
 		}
 	}
 
-	this.vitesseX = function(vitx){
-		this.vx = vitx;
-	}
-
-	this.isJumping = function(vity){
+	this.isJumping = function(){
 		this.jump = true;
 	}
 
-	this.direction = function(x){
+	this.moveDirection = function(x){
 		this.dir = x;
+		if (x == "l")
+		{
+			this.vx = -10; 
+		}
+		else if (x == "r")
+		{
+			this.vx = 10; 
+		}
+	}
+
+	this.stopRunning = function(){
+		this.vx = 0;
 	}
 
 }
