@@ -435,6 +435,7 @@ function Player(x, y, width, height){
 	this.runR8 = new PIXI.Sprite.fromFrame('run_right_08.png');
 	this.runR9 = new PIXI.Sprite.fromFrame('run_right_09.png');
 	
+	//Idle left and right
 
 	this.idleL.width = this.width;
 	this.idleL.height = this.height;
@@ -808,6 +809,13 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 
 		if (this.y > 700) {
 			removeFruit(this);
+		}
+		
+		if(this.x > 800){
+			this.x = 0;
+		}
+		else if(this.x < 0){
+			this.x = 800;
 		}
 	}
 
