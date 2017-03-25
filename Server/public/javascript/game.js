@@ -110,7 +110,7 @@ var leaderboard;
 
 function setup() {
 
-	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').add('../gameTextures/sky.json').add('../gameTextures/tim.json').load(function(loader, resources) {
+	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').add('../gameTextures/sky.json').add('../gameTextures/tim.json').add('../gameTextures/hitbox.json').load(function(loader, resources) {
 		if (true) {
 			loadMainMenu()
 		} else {
@@ -394,7 +394,7 @@ function Title(x, y, width, height, title) {
 	}
 }
 
-function Player(x, y, width, height){
+function Player(x, y, width, height){ // at 30, 35 with 25x65
 	this.x = x;
 	this.y = y;
 	this.width = width;
@@ -553,7 +553,31 @@ function Player(x, y, width, height){
 	this.runR9.x = this.x - (this.runR9.width/2);
 	this.runR9.y = this.y - (this.runR9.height/2);
 
+	// Player hitbox
+	this.hitbox = new SAT.Box(new SAT.Vector((this.x - (25/2)),(this.y - (35/2))), 25, 35);
+	this.unhit_hitbox = new PIXI.Sprite.fromFrame('square_green.png');
+	this.unhit_hitbox.x = this.hitbox.pos.x;
+	this.unhit_hitbox.y = this.hitbox.pos.y;
+	this.unhit_hitbox.width = this.hitbox.w;
+	this.unhit_hitbox.height = this.hitbox.h;
+
+	this.hit_hitbox = new PIXI.Sprite.fromFrame('square_red.png');
+	this.hit_hitbox.x = this.hitbox.pos.x;
+	this.hit_hitbox.y = this.hitbox.pos.y;
+	this.hit_hitbox.width = this.hitbox.w;
+	this.hit_hitbox.height = this.hitbox.h;
+
+
 	this.update = function(){
+		// update hitbox
+		this.hitbox.pos.x = this.x - (this.hitbox.w/2);
+ 		this.hitbox.pos.y = this.y - (this.hitbox.h/2);
+		this.unhit_hitbox.x = this.hitbox.pos.x;
+		this.unhit_hitbox.y = this.hitbox.pos.y;
+
+		this.hit_hitbox.x = this.hitbox.pos.x;
+		this.hit_hitbox.y = this.hitbox.pos.y;
+
 		this.x += this.vx;
 		this.y = this.originalY - (this.sinY * 200);
 
