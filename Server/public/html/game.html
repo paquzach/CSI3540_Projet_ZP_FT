@@ -27,9 +27,14 @@
 </div>
 </ul>
 
+<form id = "gameForm" action="game.html" method="post">
+	<input type="hidden" id="scoreArea" name="userScore">
+</form>
+
 <script>
 	var user = <%- JSON.stringify(user) %>;
 	var rows = <%- JSON.stringify(rows) %>;
+	var lastScore = <%- JSON.stringify(score) %>;
 </script>
 
 <div style="width:800px; margin:0 auto;">
