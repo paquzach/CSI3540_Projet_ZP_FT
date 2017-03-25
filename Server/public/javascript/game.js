@@ -24,8 +24,7 @@
  var then = Date.now();
  var interval = 1000/fps;
  var delta;
-
- var currentScreen = "none";
+ var currentScreen;
 
 // Main menu
 var fruity_background;
@@ -34,15 +33,20 @@ var highscore_button;
 var title;
 var leaderboard;
 
+// Form items
+var form = document.getElementById("gameForm");
+var scoreInput = document.getElementById('scoreArea')
+scoreInput.value = -1;
+
  // Classements
  var nom1, nom2, nom3, nom4, nom5;
  var score1, score2, score3, score4, score5;
  var scoreMsg = null;
- var lastScore = 10000;
 
 
  // Game
  var sky_and_ground;
+ var backButton; 
 
  var fruitCollection;
 
@@ -111,10 +115,10 @@ var leaderboard;
 function setup() {
 
 	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').add('../gameTextures/sky.json').add('../gameTextures/tim.json').load(function(loader, resources) {
-		if (true) {
+		if (lastScore < 0) {
 			loadMainMenu()
 		} else {
-			loadHighscore();
+			loadHighscores();
 		}
 	});
 
@@ -124,8 +128,8 @@ function setup() {
 function loadMainMenu() {
 	// PLAY BUTTON
 	fruity_background = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('fruity_background.png'));
-	play_button = new Button(280, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER");
-	highscore_button = new Button(520, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "CLASSEMENTS");
+	play_button = new Button(280, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER", 25);
+	highscore_button = new Button(520, 380, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "CLASSEMENTS", 25);
 	title = new Title (400, 150, 417, 153, new PIXI.Sprite.fromFrame('title.png'));
 
 	play_button.container.mousedown = function(mousedata) {
@@ -143,6 +147,12 @@ function loadGame() {
 
 	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
 	tim = new Player(400, 470, 90, 115); 
+	backButton = new Button(45, 30, 80, 40, new PIXI.Sprite.fromFrame('grey_sliderLeft.png'), new PIXI.Sprite.fromFrame('green_sliderLeft.png'), "RETOUR", 10);
+
+	backButton.container.mousedown = function(mousedata) {
+		currentScreen = "none";
+		loadMainMenu();
+	}
 
 	xSpeedMin = 0;
 	xSpeedMax = 70;
@@ -201,17 +211,18 @@ function loadHighscores() {
 	score5.y = 270;
 
 	//check if there is a score from a previous game. If so, post it
-	if(lastScore > rows[4].highscore){
-		scoreMsg = new PIXI.Text("Felicitation! Vous avez atteint le top 5 avec un score de \n" + lastScore + " U la dernière joute!", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
-		scoreMsg.x = 400 - scoreMsg.width/2;
-		scoreMsg.y = 360;
+	if (lastScore >= 0){
+		if(lastScore > rows[4].highscore){
+			scoreMsg = new PIXI.Text("Felicitation! Vous avez atteint le top 5 avec un score de \n" + lastScore + " U la dernière joute!", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
+			scoreMsg.x = 400 - scoreMsg.width/2;
+			scoreMsg.y = 360;
+		}
+		else {
+			scoreMsg = new PIXI.Text("Pas pire! Vous avez eu un score de " + lastScore + " U \nla dernière joute.", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
+			scoreMsg.x = 400 - scoreMsg.width/2;
+			scoreMsg.y = 360;
+		}
 	}
-	else {
-		scoreMsg = new PIXI.Text("Pas pire! Vous avez eu un score de " + lastScore + " U \nla dernière joute.", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
-		scoreMsg.x = 400 - scoreMsg.width/2;
-		scoreMsg.y = 360;
-	}
-	
 
 
 	play_button.container.mousedown = function(mousedata) {
@@ -222,7 +233,6 @@ function loadHighscores() {
 		currentScreen = "none";
 		loadMainMenu();
 	}
-
 	currentScreen = "highscores"
 }
 
@@ -249,7 +259,6 @@ function update() {
     		title.render();
     	} else if(currentScreen == "game") {
 			// Updates
-
 			tim.update();
 			createFruits();
 			updateAllFruits();
@@ -257,6 +266,7 @@ function update() {
 
 			// Renders
 			sky_and_ground.render();
+			backButton.render();
 			tim.render();
 			renderAllFruits();
 
@@ -279,16 +289,21 @@ function update() {
 
 // OBJECTS
 // Button
-function Button(x, y, width, height, light, dark, text) {
+function Button(x, y, width, height, light, dark, text, fontSize) {
 	this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
+	this.fontSize = fontSize;
 
-	this.text = new PIXI.Text(text, {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"center"});
-	this.text.x = this.x - (this.text.width / 2);
-	this.text.y = this.y - (this.text.height / 2);
+	this.text = new PIXI.Text(text, {font:"Arial", fontSize: this.fontSize, fontWeight: "bold", fill:"#000000", align:"center"});
 
+	if (text != "RETOUR") {
+		this.text.x = this.x - (this.text.width / 2);
+	}
+	else{
+		this.text.x = this.x - (this.text.width / 2) + 10;
+	}
 	if (this.text.width > (this.width - 16)) {
 		this.width = this.text.width + 16;
 	}
@@ -325,12 +340,22 @@ function Button(x, y, width, height, light, dark, text) {
 
 		if (this.mouseOver) {
 			stage.addChild(this.dark);
-			this.text.style = {font:"50px Arial", fontWeight: "bold", fill:"#262626", align:"center"};
-			this.text.y = this.y - (this.text.height / 2) + 2;
+			this.text.style = {font:"Arial", fontSize: this.fontSize, fontWeight: "bold", fill:"#262626", align:"center"};
+			if (text != "RETOUR") {
+				this.text.y = this.y - (this.text.height / 2) + 2;
+			}
+			else{
+				this.text.y = this.y - (this.text.height / 2) - 1.5;
+			}
 		} else {
 			stage.addChild(this.light);
-			this.text.style = {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"center"};
-			this.text.y = this.y - (this.text.height / 2);
+			this.text.style = {font:"Arial", fontSize: this.fontSize, fontWeight: "bold", fill:"#000000", align:"center"};
+			if (text != "RETOUR") {
+				this.text.y = this.y - (this.text.height / 2);
+			}
+			else{
+				this.text.y = this.y - (this.text.height / 2) - 2;
+			}
 		}
 		stage.addChild(this.text);
 		stage.addChild(this.container);
@@ -810,12 +835,12 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 		if (this.y > 700) {
 			removeFruit(this);
 		}
-		
-		if(this.x > 800){
-			this.x = 0;
+
+		if(this.x > 860){
+			this.x = 30;
 		}
-		else if(this.x < 0){
-			this.x = 800;
+		else if(this.x < 30){
+			this.x = 860;
 		}
 	}
 
@@ -975,7 +1000,7 @@ function Board(x, y, width, height, board) {
 		stage.addChild(score3);
 		stage.addChild(score4);
 		stage.addChild(score5);
-		if (scoreMsg != null)
+		if (lastScore >= 0)
 		{
 			stage.addChild(scoreMsg);
 		}
