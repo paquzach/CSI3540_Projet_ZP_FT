@@ -57,6 +57,16 @@ var leaderboard;
 
  var tim;
 
+ var BANANA = 0;
+ var COCONUT = 1;
+ var MANGO = 2;
+ var ORANGE = 3;
+ var PEAR = 4;
+ var PINEAPPLE = 5;
+ var SQUASHSPIN = 6;
+ var SQUASHTUMBLE = 7;
+ var WATERMELON = 8;
+
  //Keyboard
 
  //Si tim va vers la droite et on release la droite, arete. Sinon ignore 
@@ -65,7 +75,7 @@ var leaderboard;
  var up = keyboard(38);
 
  left.press = function() {
- 	console.log("LEFT");
+ 	//console.log("LEFT");
  	if (!left.isDown){
  		tim.moveDirection("l");
  	}
@@ -74,13 +84,13 @@ var leaderboard;
  	}
  };
  left.release = function() {
- 	console.log("LEFT RELEASE");
+ 	//console.log("LEFT RELEASE");
  	if (!right.isDown) {
  		tim.stopRunning();
     }
  };
  right.press = function() {
- 	console.log("RIGHT");
+ 	//console.log("RIGHT");
  	if (!right.isDown){
  		tim.moveDirection("r");
  	}
@@ -89,17 +99,17 @@ var leaderboard;
  	}
  };
  right.release = function() {
- 	console.log("RIGHT RELEASE");
+ 	//console.log("RIGHT RELEASE");
  	if (!left.isDown) {
       tim.stopRunning();
     }
  };
  up.press = function() {
- 	console.log("UP");
+ 	//console.log("UP");
  	tim.isJumping();
  };
  up.release = function() {
- 	console.log("UP RELEASE");
+ 	//console.log("UP RELEASE");
  };
 
  console.log(type);
@@ -253,12 +263,13 @@ function update() {
 			tim.update();
 			createFruits();
 			updateAllFruits();
-			checkCollisions();
 
 			// Renders
 			sky_and_ground.render();
 			tim.render();
 			renderAllFruits();
+
+			checkCollisions();
 
 		} else if (currentScreen == "highscores") {
 			fruity_background.render();
@@ -553,8 +564,10 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 	this.runR9.x = this.x - (this.runR9.width/2);
 	this.runR9.y = this.y - (this.runR9.height/2);
 
-	// Player hitbox
-	this.hitbox = new SAT.Box(new SAT.Vector((this.x - (25/2)),(this.y - (35/2))), 25, 35);
+	// Player hitbox 90, 115
+	this.hitbox_head = new SAT.Circle(new SAT.Vector(this.x - 20,this.y - 20), 20);
+
+	this.hitbox = new SAT.Box(new SAT.Vector((this.x - (50/2)),(this.y - (95/2))), 50, 95);
 	this.unhit_hitbox = new PIXI.Sprite.fromFrame('square_green.png');
 	this.unhit_hitbox.x = this.hitbox.pos.x;
 	this.unhit_hitbox.y = this.hitbox.pos.y;
@@ -569,15 +582,6 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 
 
 	this.update = function(){
-		// update hitbox
-		this.hitbox.pos.x = this.x - (this.hitbox.w/2);
- 		this.hitbox.pos.y = this.y - (this.hitbox.h/2);
-		this.unhit_hitbox.x = this.hitbox.pos.x;
-		this.unhit_hitbox.y = this.hitbox.pos.y;
-
-		this.hit_hitbox.x = this.hitbox.pos.x;
-		this.hit_hitbox.y = this.hitbox.pos.y;
-
 		this.x += this.vx;
 		this.y = this.originalY - (this.sinY * 200);
 
@@ -658,6 +662,15 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 		else if(this.x < 0){
 			this.x = 800;
 		}
+
+		// update hitbox
+		this.hitbox.pos.x = this.x - (this.hitbox.w/2);
+ 		this.hitbox.pos.y = this.y - (this.hitbox.h/2);
+		this.unhit_hitbox.x = this.hitbox.pos.x;
+		this.unhit_hitbox.y = this.hitbox.pos.y;
+
+		this.hit_hitbox.x = this.hitbox.pos.x;
+		this.hit_hitbox.y = this.hitbox.pos.y;
 	}
 
 	this.render = function() {
@@ -739,8 +752,9 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 
 }
 
-function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05) {
-	
+function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, fruitType) {
+	this.fruitType = fruitType;
+
 	this.spinning_state = 0;
 	this.stationary_state = 1;
 	this.state = this.spinning_state;
@@ -776,31 +790,44 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 	this.fruit_02.height = this.height;
 	this.fruit_02.x = this.x - (this.fruit_02.width/2);
 	this.fruit_02.y = this.y - (this.fruit_02.height/2);
-	this.fruit_02.anchor.set(0.5)
+	this.fruit_02.anchor.set(0.5);
 	this.fruit_02.rotation = this.angle;
 
 	this.fruit_03.width = this.width;
 	this.fruit_03.height = this.height;
 	this.fruit_03.x = this.x - (this.fruit_03.width/2);
 	this.fruit_03.y = this.y - (this.fruit_03.height/2);
-	this.fruit_03.anchor.set(0.5)
+	this.fruit_03.anchor.set(0.5);
 	this.fruit_03.rotation = this.angle;
 
 	this.fruit_04.width = this.width;
 	this.fruit_04.height = this.height;
 	this.fruit_04.x = this.x - (this.fruit_04.width/2);
 	this.fruit_04.y = this.y - (this.fruit_04.height/2);
-	this.fruit_04.anchor.set(0.5)
+	this.fruit_04.anchor.set(0.5);
 	this.fruit_04.rotation = this.angle;
 
 	this.fruit_05.width = this.width;
 	this.fruit_05.height = this.height;
 	this.fruit_05.x = this.x - (this.fruit_05.width/2);
 	this.fruit_05.y = this.y - (this.fruit_05.height/2);
-	this.fruit_05.anchor.set(0.5)
+	this.fruit_05.anchor.set(0.5);
 	this.fruit_05.rotation = this.angle;
+	
+	if (this.fruitType == COCONUT) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(this.x - 20,this.y - 20), 20);
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.x - (this.hitbox.r*2);
+		this.unhit_hitbox.y = this.y - (this.hitbox.r*2);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
 
-	this.collisionBox
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.x - (this.hitbox.r*2);
+		this.hit_hitbox.y = this.y - (this.hitbox.r*2);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	}
 
 	this.update = function() {
 		this.x += this.xSpeed;
@@ -835,11 +862,21 @@ function Fruit(x, y, width, height, fruit_01, fruit_02, fruit_03, fruit_04, frui
 			removeFruit(this);
 		}
 		
-		if(this.x > 800){
-			this.x = 0;
+		if(this.x > 950){
+			this.x = -150;
 		}
-		else if(this.x < 0){
-			this.x = 800;
+		else if(this.x < -150){
+			this.x = 950;
+		}
+
+		if(this.fruitType == COCONUT) {
+			// update hitbox
+			this.hitbox.pos.x = this.x - this.hitbox.r;
+	 		this.hitbox.pos.y = this.y - this.hitbox.r;
+			this.unhit_hitbox.x = this.x - (this.hitbox.r*2);
+			this.unhit_hitbox.y = this.y - (this.hitbox.r*2);
+			this.hit_hitbox.x = this.x - (this.hitbox.r*2);
+			this.hit_hitbox.y = this.y - (this.hitbox.r*2);
 		}
 	}
 
@@ -865,26 +902,26 @@ function createFruits() {
 		fruitCooldownCounter = 0;
 
 		var fruitToAdd;
-
+		
 		var fruitType = Math.floor(getRandomArbitrary(0, 9));
-		if (fruitType == 0) {
-			fruitToAdd = getNewBanana(0, 0);
-		} else if (fruitType == 1) {
-			fruitToAdd = getNewCoconut(0, 0);
-		} else if (fruitType == 2) {
-			fruitToAdd = getNewMango(0, 0);
-		} else if (fruitType == 3) {
-			fruitToAdd = getNewOrange(0, 0);
-		} else if (fruitType == 4) {
-			fruitToAdd = getNewPear(0, 0);
-		} else if (fruitType == 5) {
-			fruitToAdd = getNewPineapple(0, 0);
-		} else if (fruitType == 6) {
-			fruitToAdd = getNewSquashSpin(0, 0);
-		} else if (fruitType == 7) {
-			fruitToAdd = getNewSquashTumble(0, 0);
+		if (false) {
+			fruitToAdd = new Fruit(75, 121, new PIXI.Sprite.fromFrame('banana_01.png'), new PIXI.Sprite.fromFrame('banana_02.png'), new PIXI.Sprite.fromFrame('banana_03.png'), new PIXI.Sprite.fromFrame('banana_04.png'), new PIXI.Sprite.fromFrame('banana_05.png'), BANANA);
+		} else if (true) {
+			fruitToAdd = new Fruit(50, 65, new PIXI.Sprite.fromFrame('coconut_01.png'), new PIXI.Sprite.fromFrame('coconut_02.png'), new PIXI.Sprite.fromFrame('coconut_03.png'), new PIXI.Sprite.fromFrame('coconut_04.png'), new PIXI.Sprite.fromFrame('coconut_05.png'), COCONUT);
+		} else if (fruitType == MANGO) {
+			fruitToAdd = new Fruit(40, 60, new PIXI.Sprite.fromFrame('mango_01.png'), new PIXI.Sprite.fromFrame('mango_02.png'), new PIXI.Sprite.fromFrame('mango_03.png'), new PIXI.Sprite.fromFrame('mango_04.png'), new PIXI.Sprite.fromFrame('mango_05.png'), MANGO);
+		} else if (fruitType == ORANGE) {
+			fruitToAdd = new Fruit(60, 55, new PIXI.Sprite.fromFrame('orange_01.png'), new PIXI.Sprite.fromFrame('orange_02.png'), new PIXI.Sprite.fromFrame('orange_03.png'), new PIXI.Sprite.fromFrame('orange_04.png'), new PIXI.Sprite.fromFrame('orange_05.png'), ORANGE);
+		} else if (fruitType == PEAR) {
+			fruitToAdd = new Fruit(45, 60, new PIXI.Sprite.fromFrame('pear_01.png'), new PIXI.Sprite.fromFrame('pear_02.png'), new PIXI.Sprite.fromFrame('pear_03.png'), new PIXI.Sprite.fromFrame('pear_04.png'), new PIXI.Sprite.fromFrame('pear_05.png'), PEAR);
+		} else if (fruitType == PINEAPPLE) {
+			fruitToAdd = new Fruit(75, 200, new PIXI.Sprite.fromFrame('pineapple_01.png'), new PIXI.Sprite.fromFrame('pineapple_02.png'), new PIXI.Sprite.fromFrame('pineapple_03.png'), new PIXI.Sprite.fromFrame('pineapple_04.png'), new PIXI.Sprite.fromFrame('pineapple_05.png'), PINEAPPLE);
+		} else if (fruitType == SQUASHSPIN) {
+			fruitToAdd = new Fruit(80, 75, new PIXI.Sprite.fromFrame('squash_spin_01.png'), new PIXI.Sprite.fromFrame('squash_spin_02.png'), new PIXI.Sprite.fromFrame('squash_spin_03.png'), new PIXI.Sprite.fromFrame('squash_spin_04.png'), new PIXI.Sprite.fromFrame('squash_spin_05.png'), SQUASHSPIN);
+		} else if (fruitType == SQUASHTUMBLE) {
+			fruitToAdd = new Fruit(80, 80, new PIXI.Sprite.fromFrame('squash_tumble_05.png'), new PIXI.Sprite.fromFrame('squash_tumble_04.png'), new PIXI.Sprite.fromFrame('squash_tumble_03.png'), new PIXI.Sprite.fromFrame('squash_tumble_02.png'), new PIXI.Sprite.fromFrame('squash_tumble_01.png'), SQUASHTUMBLE);
 		} else {
-			fruitToAdd = getNewWatermelon(0, 0);
+			fruitToAdd = new Fruit(80, 75, new PIXI.Sprite.fromFrame('watermelon_01.png'), new PIXI.Sprite.fromFrame('watermelon_02.png'), new PIXI.Sprite.fromFrame('watermelon_03.png'), new PIXI.Sprite.fromFrame('watermelon_04.png'), new PIXI.Sprite.fromFrame('watermelon_05.png'), WATERMELON);
 		}
 
 		for (var i=0; i < maxFruits-1; i++) {
@@ -923,52 +960,21 @@ function renderAllFruits() {
 	}
 }
 
-function getNewBanana(x, y) {
-	return new Fruit(x, y, 75, 121, new PIXI.Sprite.fromFrame('banana_01.png'), new PIXI.Sprite.fromFrame('banana_02.png'), new PIXI.Sprite.fromFrame('banana_03.png'), new PIXI.Sprite.fromFrame('banana_04.png'), new PIXI.Sprite.fromFrame('banana_05.png'));
-}
-
-function getNewCoconut(x, y) {
-	return new Fruit(x, y, 50, 65, new PIXI.Sprite.fromFrame('coconut_01.png'), new PIXI.Sprite.fromFrame('coconut_02.png'), new PIXI.Sprite.fromFrame('coconut_03.png'), new PIXI.Sprite.fromFrame('coconut_04.png'), new PIXI.Sprite.fromFrame('coconut_05.png'));
-}
-
-function getNewMango(x, y) {
-	return new Fruit(x, y, 40, 60, new PIXI.Sprite.fromFrame('mango_01.png'), new PIXI.Sprite.fromFrame('mango_02.png'), new PIXI.Sprite.fromFrame('mango_03.png'), new PIXI.Sprite.fromFrame('mango_04.png'), new PIXI.Sprite.fromFrame('mango_05.png'));
-}
-
-function getNewOrange(x, y) {
-	return new Fruit(x, y, 60, 55, new PIXI.Sprite.fromFrame('orange_01.png'), new PIXI.Sprite.fromFrame('orange_02.png'), new PIXI.Sprite.fromFrame('orange_03.png'), new PIXI.Sprite.fromFrame('orange_04.png'), new PIXI.Sprite.fromFrame('orange_05.png'));
-}
-
-function getNewPear(x, y) {
-	return new Fruit(x, y, 45, 60, new PIXI.Sprite.fromFrame('pear_01.png'), new PIXI.Sprite.fromFrame('pear_02.png'), new PIXI.Sprite.fromFrame('pear_03.png'), new PIXI.Sprite.fromFrame('pear_04.png'), new PIXI.Sprite.fromFrame('pear_05.png'));
-}
-
-function getNewPineapple(x, y) {
-	return new Fruit(x, y, 75, 200, new PIXI.Sprite.fromFrame('pineapple_01.png'), new PIXI.Sprite.fromFrame('pineapple_02.png'), new PIXI.Sprite.fromFrame('pineapple_03.png'), new PIXI.Sprite.fromFrame('pineapple_04.png'), new PIXI.Sprite.fromFrame('pineapple_05.png'));
-}
-
-function getNewSquashSpin(x, y) {
-	return new Fruit(x, y, 80, 75, new PIXI.Sprite.fromFrame('squash_spin_01.png'), new PIXI.Sprite.fromFrame('squash_spin_02.png'), new PIXI.Sprite.fromFrame('squash_spin_03.png'), new PIXI.Sprite.fromFrame('squash_spin_04.png'), new PIXI.Sprite.fromFrame('squash_spin_05.png'));
-}
-
-function getNewSquashTumble(x, y) {
-	return new Fruit(x, y, 80, 80, new PIXI.Sprite.fromFrame('squash_tumble_05.png'), new PIXI.Sprite.fromFrame('squash_tumble_04.png'), new PIXI.Sprite.fromFrame('squash_tumble_03.png'), new PIXI.Sprite.fromFrame('squash_tumble_02.png'), new PIXI.Sprite.fromFrame('squash_tumble_01.png'));
-}
-
-function getNewWatermelon(x, y) {
-	return new Fruit(x, y, 80, 75, new PIXI.Sprite.fromFrame('watermelon_01.png'), new PIXI.Sprite.fromFrame('watermelon_02.png'), new PIXI.Sprite.fromFrame('watermelon_03.png'), new PIXI.Sprite.fromFrame('watermelon_04.png'), new PIXI.Sprite.fromFrame('watermelon_05.png'));
-}
-
 //hit(spriteOne, spriteTwo, true, true)
 
 function checkCollisions() {
-	for (var i=0; i < maxFruits; i++) {
-		if (i < maxFruits-1) {
-			for (var j = (i+1); j < maxFruits; j++) {
-				if (maxFruits[i] != null && maxFruits[j] != null) {
-					if (b.hit(maxFruits[i].fruit_01, maxFruits[j].fruit_01)) {
-						console.log("Collision");
-					}
+	for (var i=0; i < maxFruits-1; i++) {
+		if (fruitCollection[i] != null) {
+			if (fruitCollection[i].fruitType == COCONUT) {
+				var response = new SAT.Response();
+				var collided = SAT.testCirclePolygon(fruitCollection[i].hitbox, tim.hitbox.toPolygon(), response);
+				if (collided) {
+					stage.addChild(fruitCollection[i].hit_hitbox);
+					stage.addChild(tim.hit_hitbox);
+					break;
+				} else {
+					stage.addChild(fruitCollection[i].unhit_hitbox);
+					stage.addChild(tim.unhit_hitbox);
 				}
 			}
 		}
@@ -1049,4 +1055,12 @@ function keyboard(keyCode) {
   	"keyup", key.upHandler.bind(key), false
   	);
   return key;
+}
+
+function renderPlayerHitBoxes(collided) {
+	if (collided) {
+
+	} else {
+
+	}
 }
