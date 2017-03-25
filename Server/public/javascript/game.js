@@ -183,8 +183,8 @@ function loadGame() {
 
 function loadHighscores() {
 	fruity_background = new Background(400, 275, 800, 550,new PIXI.Sprite.fromFrame('fruity_background.png'));
-	play_button = new Button(280, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER");
-	highscore_button = new Button(520, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "MENU");
+	play_button = new Button(280, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "JOUER", 25);
+	highscore_button = new Button(520, 500, 190, 49, new PIXI.Sprite.fromFrame('green_button04.png'), new PIXI.Sprite.fromFrame('green_button03.png'), "MENU", 25);
 	leaderboard = new Board (400, 170, 700, 280, new PIXI.Sprite.fromFrame('leaderboard.png'));
 
 	nom1 = new PIXI.Text(rows[0].username, {font:"50px Arial", fontWeight: "bold", fill:"#000000", align:"left"});
@@ -588,10 +588,22 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 	this.runR9.x = this.x - (this.runR9.width/2);
 	this.runR9.y = this.y - (this.runR9.height/2);
 
-	// Player hitbox 90, 115
-	this.hitbox_head = new SAT.Circle(new SAT.Vector(this.x - 20,this.y - 20), 20);
+	// Player hitbox Head
+	this.hitbox_head = new SAT.Circle(new SAT.Vector(0, 0), 25);
+	this.unhit_hitbox_head = new PIXI.Sprite.fromFrame('circle_green.png');
+	this.unhit_hitbox_head.x = this.hitbox_head.pos.x;
+	this.unhit_hitbox_head.y = this.hitbox_head.pos.y;
+	this.unhit_hitbox_head.width = this.hitbox_head.r * 2;
+	this.unhit_hitbox_head.height = this.hitbox_head.r * 2;
 
-	this.hitbox = new SAT.Box(new SAT.Vector((this.x - (50/2)),(this.y - (95/2))), 50, 95);
+	this.hit_hitbox_head = new PIXI.Sprite.fromFrame('circle_red.png');
+	this.hit_hitbox_head.x = this.hitbox_head.pos.x;
+	this.hit_hitbox_head.y = this.hitbox_head.pos.y;
+	this.hit_hitbox_head.width = this.hitbox_head.r * 2;
+	this.hit_hitbox_head.height = this.hitbox_head.r * 2;
+
+	// Player hitbox Body
+	this.hitbox = new SAT.Box(new SAT.Vector(0, 0), 50, 60);
 	this.unhit_hitbox = new PIXI.Sprite.fromFrame('square_green.png');
 	this.unhit_hitbox.x = this.hitbox.pos.x;
 	this.unhit_hitbox.y = this.hitbox.pos.y;
@@ -687,12 +699,19 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 			this.x = 800;
 		}
 
-		// update hitbox
+		// update hitbox head
+		this.hitbox_head.pos.x = this.x - 25;
+ 		this.hitbox_head.pos.y = this.y - 53;
+		this.unhit_hitbox_head.x = this.hitbox_head.pos.x;
+		this.unhit_hitbox_head.y = this.hitbox_head.pos.y;
+		this.hit_hitbox_head.x = this.hitbox_head.pos.x;
+		this.hit_hitbox_head.y = this.hitbox_head.pos.y;
+
+		// update hitbox body 
 		this.hitbox.pos.x = this.x - (this.hitbox.w/2);
- 		this.hitbox.pos.y = this.y - (this.hitbox.h/2);
+ 		this.hitbox.pos.y = this.y - (this.hitbox.h/2) + 25;
 		this.unhit_hitbox.x = this.hitbox.pos.x;
 		this.unhit_hitbox.y = this.hitbox.pos.y;
-
 		this.hit_hitbox.x = this.hitbox.pos.x;
 		this.hit_hitbox.y = this.hitbox.pos.y;
 	}
@@ -999,6 +1018,15 @@ function checkCollisions() {
 				} else {
 					stage.addChild(fruitCollection[i].unhit_hitbox);
 					stage.addChild(tim.unhit_hitbox);
+				}
+				var collidedCircle = SAT.testCircleCircle(fruitCollection[i].hitbox, tim.hitbox_head, response);
+				if (collidedCircle) {
+					stage.addChild(fruitCollection[i].hit_hitbox);
+					stage.addChild(tim.hit_hitbox_head);
+					break;
+				} else {
+					stage.addChild(fruitCollection[i].unhit_hitbox);
+					stage.addChild(tim.unhit_hitbox_head);
 				}
 			}
 		}
