@@ -1,0 +1,28 @@
+{"frames": {
+
+"health_bar.png":
+{
+	"frame": {"x":1,"y":23,"w":200,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":16},
+	"sourceSize": {"w":200,"h":16}
+},
+"health_bar_border.png":
+{
+	"frame": {"x":1,"y":1,"w":204,"h":20},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":204,"h":20},
+	"sourceSize": {"w":204,"h":20}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "healthbar.png",
+	"format": "RGBA8888",
+	"size": {"w":206,"h":40},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:e899ed569a002356b80a38caa79808ee:33cbd805bedb0dd29ff6c3c2fc8d88ba:ea6f465831e31bd936c973183f85411d$"
+}
+}

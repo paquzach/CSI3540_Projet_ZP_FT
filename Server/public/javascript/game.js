@@ -77,6 +77,8 @@ scoreInput.value = 0;
  var collisionCoolDownCounter;
  var renderCollisions = false;
 
+ var hb;
+
  //Keyboard
 
  //Si tim va vers la droite et on release la droite, arete. Sinon ignore 
@@ -97,7 +99,7 @@ scoreInput.value = 0;
  	//console.log("LEFT RELEASE");
  	if (!right.isDown) {
  		tim.stopRunning();
-    }
+ 	}
  };
  right.press = function() {
  	//console.log("RIGHT");
@@ -111,8 +113,8 @@ scoreInput.value = 0;
  right.release = function() {
  	//console.log("RIGHT RELEASE");
  	if (!left.isDown) {
-      tim.stopRunning();
-    }
+ 		tim.stopRunning();
+ 	}
  };
  up.press = function() {
  	//console.log("UP");
@@ -129,7 +131,7 @@ scoreInput.value = 0;
 //setup();
 
 function setup() {
-	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').add('../gameTextures/sky.json').add('../gameTextures/tim.json').add('../gameTextures/hitbox.json').load(function(loader, resources) {
+	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').add('../gameTextures/sky.json').add('../gameTextures/tim.json').add('../gameTextures/hitbox.json').add('../gameTextures/healthbar.json').load(function(loader, resources) {
 		if (lastScore < 0) {
 			loadMainMenu()
 		} else {
@@ -167,8 +169,6 @@ function loadGame() {
 
 	backButton.container.mousedown = function(mousedata) {
 		currentScreen = "none";
-		scoreInput.value = score;
-		form.submit();
 		loadMainMenu();
 	}
 
@@ -189,8 +189,9 @@ function loadGame() {
 		fruitCollection[i] = null;
 	}
 	createFruits();
-    collisionCoolDownCounter = 0;
+	collisionCoolDownCounter = 0;
 
+	hb = new Healthbar();
 
 	currentScreen = "game";
 }
@@ -294,6 +295,8 @@ function update() {
 			tim.render();
 			scoreMsg.render();
 			renderAllFruits();
+
+			hb.render();
 
 			checkCollisions();
 
@@ -720,7 +723,7 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 
 		// update hitbox head
 		this.hitbox_head.pos.x = this.x;
- 		this.hitbox_head.pos.y = this.y - 25;
+		this.hitbox_head.pos.y = this.y - 25;
 		this.unhit_hitbox_head.x = this.hitbox_head.pos.x  - this.hitbox_head.r;
 		this.unhit_hitbox_head.y = this.hitbox_head.pos.y  - this.hitbox_head.r;
 		this.hit_hitbox_head.x = this.hitbox_head.pos.x  - this.hitbox_head.r;
@@ -728,7 +731,7 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 
 		// update hitbox body 
 		this.hitbox.pos.x = this.x - (this.hitbox.w/2);
- 		this.hitbox.pos.y = this.y - (this.hitbox.h/2) + 25;
+		this.hitbox.pos.y = this.y - (this.hitbox.h/2) + 25;
 		this.unhit_hitbox.x = this.hitbox.pos.x;
 		this.unhit_hitbox.y = this.hitbox.pos.y;
 		this.hit_hitbox.x = this.hitbox.pos.x;
@@ -893,7 +896,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 18);
 		this.hitbox.pos.x = this.x - 25;
-	 	this.hitbox.pos.y = this.y - 30;
+		this.hitbox.pos.y = this.y - 30;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -910,7 +913,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 15);
 		this.hitbox.pos.x = this.x - 20;
-	 	this.hitbox.pos.y = this.y - 30;
+		this.hitbox.pos.y = this.y - 30;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -927,7 +930,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 25);
 		this.hitbox.pos.x = this.x - 30;
-	 	this.hitbox.pos.y = this.y - 30;
+		this.hitbox.pos.y = this.y - 30;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -944,7 +947,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 15);
 		this.hitbox.pos.x = this.x - 22;
-	 	this.hitbox.pos.y = this.y - 15;
+		this.hitbox.pos.y = this.y - 15;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -961,7 +964,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
 		this.hitbox.pos.x = this.x - 22;
-	 	this.hitbox.pos.y = this.y - 15;
+		this.hitbox.pos.y = this.y - 15;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -978,7 +981,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
 		this.hitbox.pos.x = this.x - 38;
-	 	this.hitbox.pos.y = this.y - 45;
+		this.hitbox.pos.y = this.y - 45;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -995,7 +998,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
 		this.hitbox.pos.x = this.x - 40;
-	 	this.hitbox.pos.y = this.y - 43;
+		this.hitbox.pos.y = this.y - 43;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -1012,7 +1015,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 32);
 		this.hitbox.pos.x = this.x - 40;
-	 	this.hitbox.pos.y = this.y - 40;
+		this.hitbox.pos.y = this.y - 40;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
 		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
@@ -1070,26 +1073,26 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		 var SQUASHSPIN = 6;
 		 var SQUASHTUMBLE = 7;
 		 var WATERMELON = 8;
-		*/
+		 */
 
-		if(this.fruitType == COCONUT) {
+		 if(this.fruitType == COCONUT) {
 			// update hitbox
 			this.hitbox.pos.x = this.x - 25;
-	 		this.hitbox.pos.y = this.y - 30;
+			this.hitbox.pos.y = this.y - 30;
 			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		} else if (this.fruitType == MANGO) {
 			this.hitbox.pos.x = this.x - 20;
-	 		this.hitbox.pos.y = this.y - 30;
+			this.hitbox.pos.y = this.y - 30;
 			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		} else if (this.fruitType == ORANGE) {
 			this.hitbox.pos.x = this.x - 30;
-	 		this.hitbox.pos.y = this.y - 30;
+			this.hitbox.pos.y = this.y - 30;
 			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
@@ -1110,7 +1113,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 					this.hitbox.pos.x = this.x - 16;
 				}
 			}
-	 		this.hitbox.pos.y = this.y - 15;
+			this.hitbox.pos.y = this.y - 15;
 			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
@@ -1142,21 +1145,21 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		} else if (this.fruitType == SQUASHSPIN) {
 			this.hitbox.pos.x = this.x - 38;
-	 		this.hitbox.pos.y = this.y - 45;
+			this.hitbox.pos.y = this.y - 45;
 			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		} else if (this.fruitType == SQUASHTUMBLE) {
 			this.hitbox.pos.x = this.x - 40;
-	 		this.hitbox.pos.y = this.y - 43;
+			this.hitbox.pos.y = this.y - 43;
 			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		} else if (this.fruitType == WATERMELON) {
 			this.hitbox.pos.x = this.x - 40;
-	 		this.hitbox.pos.y = this.y - 40;
+			this.hitbox.pos.y = this.y - 40;
 			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
 			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
@@ -1263,7 +1266,7 @@ function checkCollisions() {
 					//console.log(fruitCollection[i].angle);
 					if (tim.coolDownCounter == 0) {
 						tim.coolDownCounter++;
-						playerHit();
+						playerHit(fruitCollection[i].fruitType);
 						removeFruit(fruitCollection[i]);
 						break;
 					}
@@ -1281,7 +1284,7 @@ function checkCollisions() {
 				if (collidedCircle) {
 					if (tim.coolDownCounter == 0) {
 						tim.coolDownCounter++;
-						playerHit();
+						playerHit(fruitCollection[i].fruitType);
 						removeFruit(fruitCollection[i]);
 						break;
 					}
@@ -1403,7 +1406,82 @@ function renderPlayerHitBoxes(collided) {
 	}
 }
 
-function playerHit() {
-	console.log("player has been hit");
-	
-}
+function playerHit(fruitType) {
+	if (false) {
+			// no more banana
+		} else if (fruitType == COCONUT) {
+			hb.substract(10);
+		} else if (fruitType == MANGO) {
+			hb.substract(10);
+		} else if (fruitType == ORANGE) {
+			hb.substract(15);
+		} else if (fruitType == PEAR) {
+			hb.substract(5);
+		} else if (fruitType == PINEAPPLE) {
+			hb.substract(25);
+		} else if (fruitType == SQUASHSPIN) {
+			hb.substract(20);
+		} else if (fruitType == SQUASHTUMBLE) {
+			hb.substract(20);
+		} else { // watermelon
+			hb.substract(25);
+		}
+
+		if (hb.health == 0) {
+			scoreInput.value = score;
+			form.submit();
+			//loadHighscores();
+		}
+
+	}
+
+	function Healthbar() {
+		this.x = 260;
+		this.y = 30;
+
+		this.health = 100;
+		this.healthWidth = 200;
+		this.healthHeight = 16;
+		this.healthSprite = new PIXI.Sprite.fromFrame('health_bar.png');
+		this.healthSprite.x = this.x - (this.healthWidth / 2);
+		this.healthSprite.y = this.y - (this.healthHeight / 2);
+		this.healthSprite.width = this.healthWidth;
+		this.healthSprite.height = this.healthHeight;
+
+		this.healthBarWidth = 204;
+		this.healthBarHeight = 20;
+		this.healthBarSprite = new PIXI.Sprite.fromFrame('health_bar_border.png');
+		this.healthBarSprite.x = this.x - (this.healthBarWidth / 2);
+		this.healthBarSprite.y = this.y - (this.healthBarHeight / 2);
+		this.healthBarSprite.width = this.healthBarWidth;
+		this.healthBarSprite.height = this.healthBarHeight;
+		
+		this.healthLoss = new PIXI.Text("", {font:"30px Arial", fontWeight: "bold", fill:"#ff0000", align:"center"});
+		this.yOffset = 0;
+		this.lastAmountLoss = 0;
+
+		this.substract = function(amount) {
+			this.health -= amount;
+			if (this.health < 0) {
+				this.health = 0;
+			}
+			this.healthSprite.width = this.healthWidth * (this.health / 100);
+			this.lastAmountLoss = amount;
+		}
+
+		this.render = function() {
+			stage.addChild(this.healthSprite);
+			stage.addChild(this.healthBarSprite);
+
+			if (tim.coolDownCounter != 0) {
+				this.yOffset += 0.5;
+				this.healthLoss.y = tim.y - (tim.height/2) - 5 - this.yOffset;
+				this.healthLoss.text = "-" + this.lastAmountLoss;
+				this.healthLoss.x = tim.x - (this.healthLoss.width/2);
+
+				stage.addChild(this.healthLoss);
+			} else {
+				this.yOffset = 0;
+			}
+		}
+	}
