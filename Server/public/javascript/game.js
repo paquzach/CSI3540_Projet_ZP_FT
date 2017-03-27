@@ -1,6 +1,6 @@
  // Setting up stage renderer
 
- var type = "WebGL"
+ var type = "canvas"
  if(!PIXI.utils.isWebGLSupported()){
  	type = "canvas"
  }
@@ -70,6 +70,10 @@ scoreInput.value = -1;
  var SQUASHSPIN = 6;
  var SQUASHTUMBLE = 7;
  var WATERMELON = 8;
+
+ var collisionCoolDownTime = 120;
+ var collisionCoolDownCounter;
+ var renderCollisions = false;
 
  //Keyboard
 
@@ -177,6 +181,8 @@ function loadGame() {
 		fruitCollection[i] = null;
 	}
 	createFruits();
+    collisionCoolDownCounter = 0;
+
 
 	currentScreen = "game";
 }
@@ -589,21 +595,21 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 	this.runR9.y = this.y - (this.runR9.height/2);
 
 	// Player hitbox Head
-	this.hitbox_head = new SAT.Circle(new SAT.Vector(0, 0), 25);
+	this.hitbox_head = new SAT.Circle(new SAT.Vector(this.x, (this.y - 25)), 25);
 	this.unhit_hitbox_head = new PIXI.Sprite.fromFrame('circle_green.png');
-	this.unhit_hitbox_head.x = this.hitbox_head.pos.x;
-	this.unhit_hitbox_head.y = this.hitbox_head.pos.y;
+	this.unhit_hitbox_head.x = this.hitbox_head.pos.x - this.hitbox_head.r;
+	this.unhit_hitbox_head.y = this.hitbox_head.pos.y - this.hitbox_head.r;
 	this.unhit_hitbox_head.width = this.hitbox_head.r * 2;
 	this.unhit_hitbox_head.height = this.hitbox_head.r * 2;
 
 	this.hit_hitbox_head = new PIXI.Sprite.fromFrame('circle_red.png');
-	this.hit_hitbox_head.x = this.hitbox_head.pos.x;
-	this.hit_hitbox_head.y = this.hitbox_head.pos.y;
+	this.hit_hitbox_head.x = this.hitbox_head.pos.x - this.hitbox_head.r;
+	this.hit_hitbox_head.y = this.hitbox_head.pos.y - this.hitbox_head.r;
 	this.hit_hitbox_head.width = this.hitbox_head.r * 2;
 	this.hit_hitbox_head.height = this.hitbox_head.r * 2;
 
 	// Player hitbox Body
-	this.hitbox = new SAT.Box(new SAT.Vector(0, 0), 50, 60);
+	this.hitbox = new SAT.Box(new SAT.Vector((this.x - 20), (this.y - 5)), 40, 60);
 	this.unhit_hitbox = new PIXI.Sprite.fromFrame('square_green.png');
 	this.unhit_hitbox.x = this.hitbox.pos.x;
 	this.unhit_hitbox.y = this.hitbox.pos.y;
@@ -616,6 +622,8 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 	this.hit_hitbox.width = this.hitbox.w;
 	this.hit_hitbox.height = this.hitbox.h;
 
+	this.coolDownCounter = 0;
+	this.coolDownTime = 120;
 
 	this.update = function(){
 		this.x += this.vx;
@@ -700,12 +708,12 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 		}
 
 		// update hitbox head
-		this.hitbox_head.pos.x = this.x - 25;
- 		this.hitbox_head.pos.y = this.y - 53;
-		this.unhit_hitbox_head.x = this.hitbox_head.pos.x;
-		this.unhit_hitbox_head.y = this.hitbox_head.pos.y;
-		this.hit_hitbox_head.x = this.hitbox_head.pos.x;
-		this.hit_hitbox_head.y = this.hitbox_head.pos.y;
+		this.hitbox_head.pos.x = this.x;
+ 		this.hitbox_head.pos.y = this.y - 25;
+		this.unhit_hitbox_head.x = this.hitbox_head.pos.x  - this.hitbox_head.r;
+		this.unhit_hitbox_head.y = this.hitbox_head.pos.y  - this.hitbox_head.r;
+		this.hit_hitbox_head.x = this.hitbox_head.pos.x  - this.hitbox_head.r;
+		this.hit_hitbox_head.y = this.hitbox_head.pos.y - this.hitbox_head.r;
 
 		// update hitbox body 
 		this.hitbox.pos.x = this.x - (this.hitbox.w/2);
@@ -714,61 +722,72 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 		this.unhit_hitbox.y = this.hitbox.pos.y;
 		this.hit_hitbox.x = this.hitbox.pos.x;
 		this.hit_hitbox.y = this.hitbox.pos.y;
+
+		if (this.coolDownCounter != 0) {
+			this.coolDownCounter++
+			if (this.coolDownCounter > this.coolDownTime) {
+				this.coolDownCounter = 0;
+			}
+		}
 	}
 
 	this.render = function() {
-		if (this.dir == "l" && this.vx == 0 & this.y == this.originalY){
-			stage.addChild(this.idleL);
-		}
-		else if (this.dir == "r" && this.vx == 0 && this.y == this.originalY){
-			stage.addChild(this.idleR);
-		}
-		else if (this.dir == "l" && this.y != this.originalY){
-			stage.addChild(this.jumpL);
-		}
-		else if (this.dir == "r" && this.y != this.originalY){
-			stage.addChild(this.jumpR);
-		}
-		else if (this.dir == "l" && this.vx != 0 && this.y == this.originalY){
-			if (this.frameKeeper == 1) {
-				stage.addChild(this.runL1);
-			} else if (this.frameKeeper == 2) {
-				stage.addChild(this.runL2);
-			} else if (this.frameKeeper == 3) {
-				stage.addChild(this.runL3);
-			} else if (this.frameKeeper == 4) {
-				stage.addChild(this.runL4);
-			} else if (this.frameKeeper == 5) {
-				stage.addChild(this.runL5);
-			} else if (this.frameKeeper == 6) {
-				stage.addChild(this.runL6);
-			} else if (this.frameKeeper == 7) {
-				stage.addChild(this.runL7);
-			} else if (this.frameKeeper == 8) {
-				stage.addChild(this.runL8);
-			} else if (this.frameKeeper == 9) {
-				stage.addChild(this.runL9);
+		if (this.coolDownCounter != 0 && this.coolDownCounter % 2 == 0) {
+			// flashing effect for player when hit
+		} else {
+			if (this.dir == "l" && this.vx == 0 & this.y == this.originalY){
+				stage.addChild(this.idleL);
 			}
-		}
-		else if (this.dir == "r" && this.vx != 0 && this.y == this.originalY){
-			if (this.frameKeeper == 1) {
-				stage.addChild(this.runR1);
-			} else if (this.frameKeeper == 2) {
-				stage.addChild(this.runR2);
-			} else if (this.frameKeeper == 3) {
-				stage.addChild(this.runR3);
-			} else if (this.frameKeeper == 4) {
-				stage.addChild(this.runR4);
-			} else if (this.frameKeeper == 5) {
-				stage.addChild(this.runR5);
-			} else if (this.frameKeeper == 6) {
-				stage.addChild(this.runR6);
-			} else if (this.frameKeeper == 7) {
-				stage.addChild(this.runR7);
-			} else if (this.frameKeeper == 8) {
-				stage.addChild(this.runR8);
-			} else if (this.frameKeeper == 9) {
-				stage.addChild(this.runR9);
+			else if (this.dir == "r" && this.vx == 0 && this.y == this.originalY){
+				stage.addChild(this.idleR);
+			}
+			else if (this.dir == "l" && this.y != this.originalY){
+				stage.addChild(this.jumpL);
+			}
+			else if (this.dir == "r" && this.y != this.originalY){
+				stage.addChild(this.jumpR);
+			}
+			else if (this.dir == "l" && this.vx != 0 && this.y == this.originalY){
+				if (this.frameKeeper == 1) {
+					stage.addChild(this.runL1);
+				} else if (this.frameKeeper == 2) {
+					stage.addChild(this.runL2);
+				} else if (this.frameKeeper == 3) {
+					stage.addChild(this.runL3);
+				} else if (this.frameKeeper == 4) {
+					stage.addChild(this.runL4);
+				} else if (this.frameKeeper == 5) {
+					stage.addChild(this.runL5);
+				} else if (this.frameKeeper == 6) {
+					stage.addChild(this.runL6);
+				} else if (this.frameKeeper == 7) {
+					stage.addChild(this.runL7);
+				} else if (this.frameKeeper == 8) {
+					stage.addChild(this.runL8);
+				} else if (this.frameKeeper == 9) {
+					stage.addChild(this.runL9);
+				}
+			}
+			else if (this.dir == "r" && this.vx != 0 && this.y == this.originalY){
+				if (this.frameKeeper == 1) {
+					stage.addChild(this.runR1);
+				} else if (this.frameKeeper == 2) {
+					stage.addChild(this.runR2);
+				} else if (this.frameKeeper == 3) {
+					stage.addChild(this.runR3);
+				} else if (this.frameKeeper == 4) {
+					stage.addChild(this.runR4);
+				} else if (this.frameKeeper == 5) {
+					stage.addChild(this.runR5);
+				} else if (this.frameKeeper == 6) {
+					stage.addChild(this.runR6);
+				} else if (this.frameKeeper == 7) {
+					stage.addChild(this.runR7);
+				} else if (this.frameKeeper == 8) {
+					stage.addChild(this.runR8);
+				} else if (this.frameKeeper == 9) {
+					stage.addChild(this.runR9);
+				}
 			}
 		}
 	}
@@ -858,16 +877,123 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 	this.fruit_05.rotation = this.angle;
 	
 	if (this.fruitType == COCONUT) {
-		this.hitbox = new SAT.Circle(new SAT.Vector(this.x - 20,this.y - 20), 20);
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 18);
+		this.hitbox.pos.x = this.x - 25;
+	 	this.hitbox.pos.y = this.y - 30;
 		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
-		this.unhit_hitbox.x = this.x - (this.hitbox.r*2);
-		this.unhit_hitbox.y = this.y - (this.hitbox.r*2);
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		this.unhit_hitbox.width = this.hitbox.r*2;
 		this.unhit_hitbox.height = this.hitbox.r*2;
 
 		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
-		this.hit_hitbox.x = this.x - (this.hitbox.r*2);
-		this.hit_hitbox.y = this.y - (this.hitbox.r*2);
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	} else if (this.fruitType == MANGO) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 15);
+		this.hitbox.pos.x = this.x - 20;
+	 	this.hitbox.pos.y = this.y - 30;
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
+
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	} else if (this.fruitType == ORANGE) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 25);
+		this.hitbox.pos.x = this.x - 30;
+	 	this.hitbox.pos.y = this.y - 30;
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
+
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	} else if (this.fruitType == PEAR) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 15);
+		this.hitbox.pos.x = this.x - 22;
+	 	this.hitbox.pos.y = this.y - 15;
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
+
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	} else if (this.fruitType == PINEAPPLE) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
+		this.hitbox.pos.x = this.x - 22;
+	 	this.hitbox.pos.y = this.y - 15;
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
+
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	} else if (this.fruitType == SQUASHSPIN) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
+		this.hitbox.pos.x = this.x - 38;
+	 	this.hitbox.pos.y = this.y - 45;
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
+
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	} else if (this.fruitType == SQUASHTUMBLE) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
+		this.hitbox.pos.x = this.x - 40;
+	 	this.hitbox.pos.y = this.y - 43;
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
+
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.hit_hitbox.width = this.hitbox.r*2;
+		this.hit_hitbox.height = this.hitbox.r*2;
+	} else if (this.fruitType == WATERMELON) {
+		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 32);
+		this.hitbox.pos.x = this.x - 40;
+	 	this.hitbox.pos.y = this.y - 40;
+		this.unhit_hitbox = new PIXI.Sprite.fromFrame('circle_green.png');
+		this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		this.unhit_hitbox.width = this.hitbox.r*2;
+		this.unhit_hitbox.height = this.hitbox.r*2;
+
+		this.hit_hitbox = new PIXI.Sprite.fromFrame('circle_red.png');
+		this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+		this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	}
@@ -905,14 +1031,107 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 			removeFruit(this);
 		}
 
+		/*
+		 var BANANA = 0;
+		 var COCONUT = 1;
+		 var MANGO = 2;
+		 var ORANGE = 3;
+		 var PEAR = 4;
+		 var PINEAPPLE = 5;
+		 var SQUASHSPIN = 6;
+		 var SQUASHTUMBLE = 7;
+		 var WATERMELON = 8;
+		*/
+
 		if(this.fruitType == COCONUT) {
 			// update hitbox
-			this.hitbox.pos.x = this.x - this.hitbox.r;
-	 		this.hitbox.pos.y = this.y - this.hitbox.r;
-			this.unhit_hitbox.x = this.x - (this.hitbox.r*2);
-			this.unhit_hitbox.y = this.y - (this.hitbox.r*2);
-			this.hit_hitbox.x = this.x - (this.hitbox.r*2);
-			this.hit_hitbox.y = this.y - (this.hitbox.r*2);
+			this.hitbox.pos.x = this.x - 25;
+	 		this.hitbox.pos.y = this.y - 30;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		} else if (this.fruitType == MANGO) {
+			this.hitbox.pos.x = this.x - 20;
+	 		this.hitbox.pos.y = this.y - 30;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		} else if (this.fruitType == ORANGE) {
+			this.hitbox.pos.x = this.x - 30;
+	 		this.hitbox.pos.y = this.y - 30;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		} else if (this.fruitType == PEAR) {
+			if (this.angle > -0.17 && this.angle < 0.17) {
+				this.hitbox.pos.x = this.x - 22;
+			} else if (this.angle > 0) {
+				if (this.angle < 0.25) {
+					this.hitbox.pos.x = this.x - 24;
+				} else {
+					this.hitbox.pos.x = this.x - 29;
+				}
+			} else {
+				if (this.angle > -0.25) {
+					this.hitbox.pos.x = this.x - 20;
+				} else {
+					this.hitbox.pos.x = this.x - 16;
+				}
+			}
+	 		this.hitbox.pos.y = this.y - 15;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		} else if (this.fruitType == PINEAPPLE) {
+			if (this.angle > -0.1 && this.angle < 0.1) {
+				this.hitbox.pos.x = this.x - 35;
+			} else if (this.angle > 0) {
+				if (this.angle < 0.35) {
+					this.hitbox.pos.x = this.x - 50;
+				} else if (this.angle < 0.5) {
+					this.hitbox.pos.x = this.x - 55;
+				} else {
+					this.hitbox.pos.x = this.x - 65;
+				}
+			} else {
+				if (this.angle > -0.35) {
+					this.hitbox.pos.x = this.x - 20;
+				}  else if (this.angle > -0.5) {
+					this.hitbox.pos.x = this.x - 15;
+				} else {
+					this.hitbox.pos.x = this.x - 5;
+				}
+			}
+			this.hitbox.pos.y = this.y - 45;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		} else if (this.fruitType == SQUASHSPIN) {
+			this.hitbox.pos.x = this.x - 38;
+	 		this.hitbox.pos.y = this.y - 45;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		} else if (this.fruitType == SQUASHTUMBLE) {
+			this.hitbox.pos.x = this.x - 40;
+	 		this.hitbox.pos.y = this.y - 43;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+		} else if (this.fruitType == WATERMELON) {
+			this.hitbox.pos.x = this.x - 40;
+	 		this.hitbox.pos.y = this.y - 40;
+			this.unhit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.unhit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
+			this.hit_hitbox.x = this.hitbox.pos.x - (this.hitbox.r);
+			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		}
 
 		if(this.x > 860){
@@ -948,8 +1167,8 @@ function createFruits() {
 		
 		var fruitType = Math.floor(getRandomArbitrary(0, 9));
 		if (false) {
-			fruitToAdd = new Fruit(75, 121, new PIXI.Sprite.fromFrame('banana_01.png'), new PIXI.Sprite.fromFrame('banana_02.png'), new PIXI.Sprite.fromFrame('banana_03.png'), new PIXI.Sprite.fromFrame('banana_04.png'), new PIXI.Sprite.fromFrame('banana_05.png'), BANANA);
-		} else if (true) {
+			//fruitToAdd = new Fruit(75, 121, new PIXI.Sprite.fromFrame('banana_01.png'), new PIXI.Sprite.fromFrame('banana_02.png'), new PIXI.Sprite.fromFrame('banana_03.png'), new PIXI.Sprite.fromFrame('banana_04.png'), new PIXI.Sprite.fromFrame('banana_05.png'), BANANA);
+		} else if (fruitType == COCONUT) {
 			fruitToAdd = new Fruit(50, 65, new PIXI.Sprite.fromFrame('coconut_01.png'), new PIXI.Sprite.fromFrame('coconut_02.png'), new PIXI.Sprite.fromFrame('coconut_03.png'), new PIXI.Sprite.fromFrame('coconut_04.png'), new PIXI.Sprite.fromFrame('coconut_05.png'), COCONUT);
 		} else if (fruitType == MANGO) {
 			fruitToAdd = new Fruit(40, 60, new PIXI.Sprite.fromFrame('mango_01.png'), new PIXI.Sprite.fromFrame('mango_02.png'), new PIXI.Sprite.fromFrame('mango_03.png'), new PIXI.Sprite.fromFrame('mango_04.png'), new PIXI.Sprite.fromFrame('mango_05.png'), MANGO);
@@ -1008,26 +1227,47 @@ function renderAllFruits() {
 function checkCollisions() {
 	for (var i=0; i < maxFruits-1; i++) {
 		if (fruitCollection[i] != null) {
-			if (fruitCollection[i].fruitType == COCONUT) {
+			if (fruitCollection[i].fruitType == COCONUT || fruitCollection[i].fruitType == MANGO || fruitCollection[i].fruitType == ORANGE || fruitCollection[i].fruitType == PEAR || fruitCollection[i].fruitType == PINEAPPLE || fruitCollection[i].fruitType == SQUASHSPIN || fruitCollection[i].fruitType == SQUASHTUMBLE || fruitCollection[i].fruitType == WATERMELON ) {
 				var response = new SAT.Response();
 				var collided = SAT.testCirclePolygon(fruitCollection[i].hitbox, tim.hitbox.toPolygon(), response);
 				if (collided) {
-					stage.addChild(fruitCollection[i].hit_hitbox);
-					stage.addChild(tim.hit_hitbox);
-					break;
+					//console.log(fruitCollection[i].angle);
+					if (tim.coolDownCounter == 0) {
+						tim.coolDownCounter++;
+						playerHit();
+						removeFruit(fruitCollection[i]);
+						break;
+					}
+					if (renderCollisions){
+						stage.addChild(fruitCollection[i].hit_hitbox);
+						stage.addChild(tim.hit_hitbox);
+					}
 				} else {
-					stage.addChild(fruitCollection[i].unhit_hitbox);
-					stage.addChild(tim.unhit_hitbox);
+					if (renderCollisions){
+						stage.addChild(fruitCollection[i].unhit_hitbox);
+						stage.addChild(tim.unhit_hitbox);
+					}
 				}
 				var collidedCircle = SAT.testCircleCircle(fruitCollection[i].hitbox, tim.hitbox_head, response);
 				if (collidedCircle) {
-					stage.addChild(fruitCollection[i].hit_hitbox);
-					stage.addChild(tim.hit_hitbox_head);
-					break;
+					if (tim.coolDownCounter == 0) {
+						tim.coolDownCounter++;
+						playerHit();
+						removeFruit(fruitCollection[i]);
+						break;
+					}
+					if (renderCollisions){
+						stage.addChild(fruitCollection[i].hit_hitbox);
+						stage.addChild(tim.hit_hitbox_head);
+					}
 				} else {
-					stage.addChild(fruitCollection[i].unhit_hitbox);
-					stage.addChild(tim.unhit_hitbox_head);
+					if (renderCollisions){
+						stage.addChild(fruitCollection[i].unhit_hitbox);
+						stage.addChild(tim.unhit_hitbox_head);
+					}
 				}
+			} else {
+				console.log("there is a mistake in the code..");
 			}
 		}
 	}
@@ -1115,4 +1355,9 @@ function renderPlayerHitBoxes(collided) {
 	} else {
 
 	}
+}
+
+function playerHit() {
+	console.log("player has been hit");
+	
 }
