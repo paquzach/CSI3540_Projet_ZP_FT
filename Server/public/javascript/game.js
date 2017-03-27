@@ -36,12 +36,14 @@ var leaderboard;
 // Form items
 var form = document.getElementById("gameForm");
 var scoreInput = document.getElementById('scoreArea')
-scoreInput.value = -1;
+scoreInput.value = 0;
 
  // Classements
  var nom1, nom2, nom3, nom4, nom5;
  var score1, score2, score3, score4, score5;
+ var finalMsg = null;
  var scoreMsg = null;
+ var score = 0;
 
 
  // Game
@@ -161,9 +163,12 @@ function loadGame() {
 	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
 	tim = new Player(400, 470, 90, 115); 
 	backButton = new Button(45, 30, 80, 40, new PIXI.Sprite.fromFrame('grey_sliderLeft.png'), new PIXI.Sprite.fromFrame('green_sliderLeft.png'), "RETOUR", 10);
+	scoreMsg = new Text(500, 15, "Score: 0 U");
 
 	backButton.container.mousedown = function(mousedata) {
 		currentScreen = "none";
+		scoreInput.value = score;
+		form.submit();
 		loadMainMenu();
 	}
 
@@ -176,6 +181,9 @@ function loadGame() {
 	maxFruits = 9;
 	fruitCooldown = 19;
 	fruitCooldownCounter = 0;
+
+	score = 0;
+
 	fruitCollection = [];
 	for (var i=0; i < maxFruits-1; i++) {
 		fruitCollection[i] = null;
@@ -228,14 +236,14 @@ function loadHighscores() {
 	//check if there is a score from a previous game. If so, post it
 	if (lastScore >= 0){
 		if(lastScore > rows[4].highscore){
-			scoreMsg = new PIXI.Text("Felicitation! Vous avez atteint le top 5 avec un score de \n" + lastScore + " U la dernière joute!", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
-			scoreMsg.x = 400 - scoreMsg.width/2;
-			scoreMsg.y = 360;
+			finalMsg = new PIXI.Text("Felicitation! Vous avez eu un score de \n" + lastScore + " U la dernière joute!", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
+			finalMsg.x = 400 - finalMsg.width/2;
+			finalMsg.y = 360;
 		}
 		else {
-			scoreMsg = new PIXI.Text("Pas pire! Vous avez eu un score de " + lastScore + " U \nla dernière joute.", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
-			scoreMsg.x = 400 - scoreMsg.width/2;
-			scoreMsg.y = 360;
+			finalMsg = new PIXI.Text("Pas pire! Vous avez eu un score de " + lastScore + " U \nla dernière joute.", {font:"45px Arial", fontWeight: "bold", fill:"#e73295", align:"left"});
+			finalMsg.x = 400 - finalMsg.width/2;
+			finalMsg.y = 360;
 		}
 	}
 
@@ -277,11 +285,14 @@ function update() {
 			tim.update();
 			createFruits();
 			updateAllFruits();
+			scoreMsg.update();
 
 			// Renders
+
 			sky_and_ground.render();
 			backButton.render();
 			tim.render();
+			scoreMsg.render();
 			renderAllFruits();
 
 			checkCollisions();
@@ -823,6 +834,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 	this.animationCounter = 0;
 	this.animationSpeed = 5;
 	this.frameKeeper = 1;
+	this.fScore = 0;
 
 	this.xSpeed = (getRandomArbitrary(xSpeedMin, xSpeedMax) / 10) - 4;
 	this.ySpeed = (getRandomArbitrary(ySpeedMin, ySpeedMax));
@@ -877,6 +889,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 	this.fruit_05.rotation = this.angle;
 	
 	if (this.fruitType == COCONUT) {
+		this.fScore = 150 + Math.round(150 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 18);
 		this.hitbox.pos.x = this.x - 25;
 	 	this.hitbox.pos.y = this.y - 30;
@@ -892,6 +906,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	} else if (this.fruitType == MANGO) {
+		this.fScore = 140 + Math.round(140 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 15);
 		this.hitbox.pos.x = this.x - 20;
 	 	this.hitbox.pos.y = this.y - 30;
@@ -907,6 +923,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	} else if (this.fruitType == ORANGE) {
+		this.fScore = 200 + Math.round(200 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 25);
 		this.hitbox.pos.x = this.x - 30;
 	 	this.hitbox.pos.y = this.y - 30;
@@ -922,6 +940,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	} else if (this.fruitType == PEAR) {
+		this.fScore = 125 + Math.round(125 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 15);
 		this.hitbox.pos.x = this.x - 22;
 	 	this.hitbox.pos.y = this.y - 15;
@@ -937,6 +957,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	} else if (this.fruitType == PINEAPPLE) {
+		this.fScore = 300 + Math.round(300 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
 		this.hitbox.pos.x = this.x - 22;
 	 	this.hitbox.pos.y = this.y - 15;
@@ -952,6 +974,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	} else if (this.fruitType == SQUASHSPIN) {
+		this.fScore = 211 + Math.round(211 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
 		this.hitbox.pos.x = this.x - 38;
 	 	this.hitbox.pos.y = this.y - 45;
@@ -967,6 +991,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	} else if (this.fruitType == SQUASHTUMBLE) {
+		this.fScore = 212 + Math.round(212 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 30);
 		this.hitbox.pos.x = this.x - 40;
 	 	this.hitbox.pos.y = this.y - 43;
@@ -982,6 +1008,8 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		this.hit_hitbox.width = this.hitbox.r*2;
 		this.hit_hitbox.height = this.hitbox.r*2;
 	} else if (this.fruitType == WATERMELON) {
+		this.fScore = 250 + Math.round(250 * (this.ySpeed / 10));
+
 		this.hitbox = new SAT.Circle(new SAT.Vector(0,0), 32);
 		this.hitbox.pos.x = this.x - 40;
 	 	this.hitbox.pos.y = this.y - 40;
@@ -1028,6 +1056,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		}
 
 		if (this.y > 700) {
+			score += this.fScore; 
 			removeFruit(this);
 		}
 
@@ -1135,7 +1164,7 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 		}
 
 		if(this.x > 860){
-			this.x = -30;
+			this.x = 30;
 		}
 		else if(this.x < 30){
 			this.x = 860;
@@ -1299,8 +1328,25 @@ function Board(x, y, width, height, board) {
 		stage.addChild(score5);
 		if (lastScore >= 0)
 		{
-			stage.addChild(scoreMsg);
+			stage.addChild(finalMsg);
 		}
+	}
+}
+
+function Text(x, y, text) {
+	this.x = x;
+	this.y = y;
+	this.text = new PIXI.Text(text, {font:"50px Arial", fontWeight: "bold", fill:"#4d2600", align:"left"});
+
+	this.text.x = this.x;
+	this.text.y = this.y;
+
+	this.update = function() {
+		this.text.text = "Score: " + score + " U";
+	}
+
+	this.render = function() {
+		stage.addChild(this.text);
 	}
 }
 

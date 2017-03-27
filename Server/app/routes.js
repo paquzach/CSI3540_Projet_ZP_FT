@@ -104,15 +104,7 @@ module.exports = function(app, passport, io){
 		userData(req.user, function(userToSend) {
 			res.render('myAccount.html', { user: userToSend});
 		});
-
-
-		/* This code is for when we want to update the highscore of a user
-			var newHighscore = req.param('userScore');
-			updateHighscore(0, req.user, function(){
-				//do nothing	
-			});
-			*/
-		});
+	});
 
 
 	app.get('/highscore.html', function(req, res) {
