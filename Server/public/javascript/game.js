@@ -20,6 +20,8 @@
  stage.interactive = true;
 
  var fps = 60;
+ var gameFps = 30;
+ var gameFpsCounter = 0;
  var now;
  var then = Date.now();
  var interval = 1000/fps;
@@ -162,6 +164,7 @@ function loadMainMenu() {
 }
 
 function loadGame() {
+	gameFpsCounter = 0;
 
 	sky_and_ground = new Background(400, 275, 800, 550, new PIXI.Sprite.fromFrame('sky.png'));
 	tim = new Player(400, 470, 90, 115); 
@@ -275,9 +278,10 @@ function update() {
 	delta = now - then;
 
 	if (delta > interval) {
-		stage.removeChildren();
 
 		if (currentScreen == "mainMenu") {
+			stage.removeChildren();
+
 			// Updates
 			title.update();
 
@@ -287,25 +291,35 @@ function update() {
     		highscore_button.render();
     		title.render();
     	} else if(currentScreen == "game") {
-			// Updates
+    		gameFpsCounter++;
+
+    		// Updates
 			tim.update();
 			createFruits();
 			updateAllFruits();
 			scoreMsg.update();
 
-			// Renders
+    		if (gameFpsCounter % 2 == 0) {
+				// Renders
 
-			sky_and_ground.render();
-			backButton.render();
-			tim.render();
-			scoreMsg.render();
-			renderAllFruits();
-			stage.addChild(floor);
-			hb.render();
+				sky_and_ground.render();
+				backButton.render();
+				tim.render();
+				scoreMsg.render();
+				renderAllFruits();
+				stage.addChild(floor);
+				hb.render();
 
-			checkCollisions();
+				checkCollisions();
+			}
+
+			if (gameFpsCounter > 59) {
+				gameFpsCounter = 0;
+			}
 
 		} else if (currentScreen == "highscores") {
+			stage.removeChildren();
+
 			fruity_background.render();
 			play_button.render();
 			highscore_button.render();
@@ -751,7 +765,7 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 	}
 
 	this.render = function() {
-		if (this.coolDownCounter != 0 && this.coolDownCounter % 2 == 0) {
+		if (this.coolDownCounter != 0 && this.coolDownCounter % 3 == 0) {
 			// flashing effect for player when hit
 		} else {
 			if (this.dir == "l" && this.vx == 0 & this.y == this.originalY){
