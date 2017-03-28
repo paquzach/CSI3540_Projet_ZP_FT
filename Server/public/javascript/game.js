@@ -176,11 +176,11 @@ function loadGame() {
 	xSpeedMin = 0;
 	xSpeedMax = 70;
 	ySpeedMin = 4;
-	ySpeedMax = 12;
+	ySpeedMax = 16;
 
 	fruitCount = 0;
-	maxFruits = 9;
-	fruitCooldown = 19;
+	maxFruits = 15;
+	fruitCooldown = 15;
 	fruitCooldownCounter = 0;
 
 	score = 0;
@@ -1171,11 +1171,11 @@ function Fruit(width, height, fruit_01, fruit_02, fruit_03, fruit_04, fruit_05, 
 			this.hit_hitbox.y = this.hitbox.pos.y - (this.hitbox.r);
 		}
 
-		if(this.x > 860){
-			this.x = 30;
+		if(this.x > 900){
+			this.x = -100;
 		}
-		else if(this.x < 30){
-			this.x = 860;
+		else if(this.x < -100){
+			this.x = 900;
 		}
 	}
 
