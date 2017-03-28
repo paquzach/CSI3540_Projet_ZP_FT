@@ -137,6 +137,9 @@ module.exports = function(app, passport, io){
 			updateHighscore(newScore, req.user, function(){
 				//do nothing
 			});
+			updateTries(req.user, function(){
+				//do nothing
+			});
 		}
 		else {
 			newScore = "none"
@@ -312,6 +315,33 @@ function updateHighscore(newScore, googleUser, callback){
         THEN @userScore
         ELSE highscore 
         END
+        WHERE email = @userEmail;`.then(function () {
+        	conn.close();
+        	callback();
+        })
+        .catch(function (err) {
+        	console.log(err);
+        	conn.close();
+        	callback();
+        });       
+    })
+	.catch(function (err) {
+		console.log(err);
+		callback();
+	});
+}
+
+function updateTries(googleUser, callback){
+	var conn = new sql.Connection(dbConfig);
+
+	console.log("Entered update tries with: ", googleUser.emails[0].value);
+
+	conn.connect().then(function () {
+		var req = new sql.Request(conn);
+		req.input('userEmail', googleUser.emails[0].value);
+        //Check if the user is created, if not create him
+        req.query`UPDATE GameInfo 
+        SET attemps = attemps + 1 
         WHERE email = @userEmail;`.then(function () {
         	conn.close();
         	callback();
