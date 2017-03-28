@@ -78,6 +78,7 @@ scoreInput.value = 0;
  var renderCollisions = false;
 
  var hb;
+ var ground;
 
  //Keyboard
 
@@ -131,7 +132,7 @@ scoreInput.value = 0;
 //setup();
 
 function setup() {
-	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').add('../gameTextures/sky.json').add('../gameTextures/tim.json').add('../gameTextures/hitbox.json').add('../gameTextures/healthbar.json').load(function(loader, resources) {
+	PIXI.loader.add('../gameTextures', '../gameTextures/ui.json').add('../gameTextures/fruity_background.json').add('../gameTextures/title.json').add('../gameTextures/leaderboard.json').add('../gameTextures/fruits.json').add('../gameTextures/sky.json').add('../gameTextures/tim.json').add('../gameTextures/hitbox.json').add('../gameTextures/healthbar.json').add('../gameTextures/floor.json').load(function(loader, resources) {
 		if (lastScore < 0) {
 			loadMainMenu()
 		} else {
@@ -192,7 +193,11 @@ function loadGame() {
 	collisionCoolDownCounter = 0;
 
 	hb = new Healthbar();
-
+	floor = new PIXI.Sprite.fromFrame('floor.png');
+	floor.width = 802;
+	floor.height = 26;
+	floor.x = 400 - (floor.width/2);
+	floor.y = 537 - (floor.height/2);
 	currentScreen = "game";
 }
 
@@ -295,7 +300,7 @@ function update() {
 			tim.render();
 			scoreMsg.render();
 			renderAllFruits();
-
+			stage.addChild(floor);
 			hb.render();
 
 			checkCollisions();
