@@ -20,7 +20,7 @@
  stage.interactive = true;
 
  var fps = 60;
- var gameFps = 30;
+ var gameFps = 3;
  var gameFpsCounter = 0;
  var now;
  var then = Date.now();
@@ -299,7 +299,7 @@ function update() {
 			updateAllFruits();
 			scoreMsg.update();
 
-    		if (gameFpsCounter % 2 == 0) {
+    		if (gameFpsCounter % gameFps == 0) {
 				// Renders
 
 				sky_and_ground.render();
@@ -309,9 +309,9 @@ function update() {
 				renderAllFruits();
 				stage.addChild(floor);
 				hb.render();
-
-				checkCollisions();
 			}
+
+			checkCollisions();
 
 			if (gameFpsCounter > 59) {
 				gameFpsCounter = 0;
@@ -765,7 +765,7 @@ function Player(x, y, width, height){ // at 30, 35 with 25x65
 	}
 
 	this.render = function() {
-		if (this.coolDownCounter != 0 && this.coolDownCounter % 3 == 0) {
+		if (this.coolDownCounter != 0 && this.coolDownCounter % 2 == 0) {
 			// flashing effect for player when hit
 		} else {
 			if (this.dir == "l" && this.vx == 0 & this.y == this.originalY){
