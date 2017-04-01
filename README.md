@@ -42,3 +42,20 @@ Francis Tremblay Pelletier, 7221721
 ## LICENCE
 
 Aucune license n'est utilisé pour ce projet.
+
+## INSTALATION ET DÉPLOIEMENT
+1. Télécharger le l'application de github: https://github.com/paquzach/CSI3540_Projet_ZP_FT
+2. Navigué dans le répertoir "NodeInstallation" et exécuter l'installation qui correspond a votre système d'exploitation.
+3. Lorsque Node est installé, vous pouvé exécuter "node -v" dans votre ligne de commande pour confirmer que l'installation a succédé.
+	
+4. Pour la base de donné, il est suggéré d'utilisé Microsoft SQL (mssql) server. Il faut créer une table qui contient les colones suivante:
+	email(PK, nchar(50), not null)
+	username(nchar(15), not null)
+	ppicture(image, null)
+	highscore(int, null)
+	attemps(int, null)
+	timePlayed(int, null)
+		
+5. Pour que l'application puisse connecter a la base de donné, modifié dbConfig dans Serveur/app/routes.js pour que les informations reflecte votre base de donné.
+	*Si vous voulez utiliser une differente base de donnée, il va falloir modifié le code pour implémenter sont support
+6. Finalement, pour partir le serveur, il faut executé "node app.js" de la ligne de commande dans le répertoir "Serveur".

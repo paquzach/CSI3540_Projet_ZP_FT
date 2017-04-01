@@ -6,12 +6,12 @@ var nextPath = "game.html";
 var sql = require("mssql");
 
 var dbConfig = {
-	server: "99.236.195.44",
-	database: "Meteorz",
-	user: "fruitz",
-	password: "PITAHAYA123!",
-	port: 8585,
-	connectionTimeout: 10000
+	server: "ip",
+	database: "database name",
+	user: "user name",
+	password: "user password!",
+	port: "port (number not string)",
+	connectionTimeout: 10000	// can leave as is
 };
 
 module.exports = function(app, passport, io){
